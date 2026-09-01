@@ -1,496 +1,419 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="dark">
 <head>
+  <script>
+    (function() {
+      var saved = localStorage.getItem('sakura-garden-theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = saved || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>sakura garden</title>
-  <meta name="description" content="A GitHub contributions garden for your README or portfolio 🌸" />
+  <link rel="icon" href="favicon.ico" />
+  <meta name="description" content="A GitHub contributions garden for your README or portfolio — commits bloom into sakura flowers 🌸" />
   <meta property="og:title" content="sakura garden" />
-  <meta property="og:description" content="A GitHub contributions garden for your README or portfolio 🌸" />
+  <meta property="og:description" content="A GitHub contributions garden for your README or portfolio — commits bloom into sakura flowers 🌸" />
+  <meta property="og:image" content="https://sakura-garden.vercel.app/og-image.png" />
+  <meta property="og:url" content="https://sakura-garden.vercel.app" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="sakura garden" />
+  <meta name="twitter:description" content="A GitHub contributions garden for your README or portfolio — commits bloom into sakura flowers 🌸" />
+  <meta name="twitter:image" content="https://sakura-garden.vercel.app/og-image.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap"
-    rel="stylesheet" />
-  <link rel="icon" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg: #fdf6f0;
-      --bg2: #fff9f5;
-      --text: #1a0a00;
-      --text2: #7a5a4a;
-      --accent: #e8547a;
-      --accent2: #f9a8c0;
-      --border: #f0ddd5;
-      --cell-0: #f5e6e0;
-      --cell-1: #ffc8d8;
-      --cell-2: #ff8fab;
-      --cell-3: #e8547a;
-      --cell-4: #c2185b;
-      --shadow: rgba(232, 84, 122, 0.12);
-      --card: #ffffff;
+    /* ─── THEMES ─────────────────────────────────────────────────── */
+    :root, [data-theme="dark"] {
+      --cell-empty: rgba(255,255,255,0.25);
+      --mono-text: #ffffff;
+      --bg: #010409;
+      --surface: #0d1117;
+      --surface2: #1a1a1f;
+      --border: #252530;
+      --border2: #2e2e3a;
+      --text: #f0f6fc;
+      --text2: #f0f6fc;
+      --text3: #9198a1;
+      --accent: #ff85b3;
+      --c0: #1a1a22;
+      --c1: #6b1f35;
+      --c2: #c2185b;
+      --c3: #ff85b3;
+      --c4: #ff8fab;
+      --garden-color: #4a7a44;
+      --lvl1: #6b1f35;
+      --lvl2: #6b1f35;
+      --lvl3: #6b1f35;
+      --lvl4: #6b1f35;
+      --center1: color-mix(in srgb, var(--lvl1) 35%, white);
+      --center2: color-mix(in srgb, var(--lvl2) 35%, white);
+      --center3: color-mix(in srgb, var(--lvl3) 35%, white);
+      --center4: color-mix(in srgb, var(--lvl4) 35%, white);
+      --shadow: 0 4px 24px rgba(0,0,0,0.35);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
+      --cell-empty: #4a7a44;
     }
 
-    [data-theme="dark"] {
-      --bg: #0d0709;
-      --bg2: #120b0e;
-      --text: #fdf0f5;
-      --text2: #c0899a;
-      --accent: #ff6b9d;
-      --accent2: #ff8fab;
-      --border: #2a1520;
-      --cell-0: #1a0d12;
-      --cell-1: #6b1f35;
-      --cell-2: #c2185b;
-      --cell-3: #e8547a;
-      --cell-4: #ff8fab;
-      --shadow: rgba(255, 107, 157, 0.15);
-      --card: #180d11;
+    [data-theme="light"] {
+      --bg: #f6f8fa;
+      --surface: #ffffff;
+      --surface2: #f6f8fa;
+      --border: #dcdce8;
+      --border2: #c8c8dc;
+      --text: #111118;
+      --text2: #52526a;
+      --text3: #9898b8;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+      --cell-empty: #52c41a;
+      --mono-text: #000000;
+      --garden-color: #52c41a;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { 
+      overflow-x: hidden;
+      width: 100%;
     }
+
+    html { transition: background 0.25s; }
 
     body {
-      font-family: 'DM Mono', monospace;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      transition: background 0.4s, color 0.4s;
+      line-height: 1.6;
+      transition: background 0.25s;
     }
 
-    .petals {
+    body::before {
+      content: '';
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 0;
-      overflow: hidden;
     }
 
-    .petal {
+    /* ─── DECORATIVE GIANT BLOOMS (card only) ───────────────────── */
+    .deco-bloom--inner {
       position: absolute;
-      font-size: 1.2rem;
-      opacity: 0.18;
-      animation: fall linear infinite;
-      top: -2rem;
+      top: -40px;
+      right: -30px;
+      width: 220px;
+      height: 220px;
+      opacity: 0.055;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(12deg);
     }
+    [data-theme="light"] .deco-bloom--inner { opacity: 0.08; }
+    .deco-bloom--inner svg ellipse { fill: var(--accent); transition: fill 0.25s; }
+    .deco-bloom--inner svg circle { fill: var(--accent); opacity: 0.55; transition: fill 0.25s; }
 
-    @keyframes fall {
-      0% {
-        transform: translateY(-2rem) rotate(0deg);
-        opacity: 0.18;
-      }
+    .deco-bloom--inner2 {
+      position: absolute;
+      bottom: -35px;
+      left: -25px;
+      width: 150px;
+      height: 150px;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(-22deg);
+    }
+    [data-theme="light"] .deco-bloom--inner2 { opacity: 0.075; }
+    .deco-bloom--inner2 svg ellipse { fill: var(--accent); transition: fill 0.25s; }
+    .deco-bloom--inner2 svg circle { fill: var(--accent); opacity: 0.55; transition: fill 0.25s; }
 
-      100% {
-        transform: translateY(105vh) rotate(360deg);
-        opacity: 0;
-      }
+    @media (max-width: 812px) {
+      .deco-bloom--inner { width: 150px; height: 150px; top: -25px; right: -25px; opacity: 0.06; }
+      .deco-bloom--inner2 { display: none; }
     }
 
     .wrapper {
       position: relative;
       z-index: 1;
-      max-width: 900px;
+      max-width: 971.5px;
       margin: 0 auto;
-      padding: 2rem 1.5rem 4rem;
+      padding: 3rem 1.5rem 6rem;
+      width: 100%;
     }
 
-    header {
+    .readme-bar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 3.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
+      gap: 0.6rem;
+      padding: 0.45rem 0.8rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px 8px 0 0;
+      font-size: 0.72rem;
+      color: var(--text3);
+      transition: background 0.25s;
     }
-
-    .logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      font-style: italic;
-      color: var(--accent);
-      letter-spacing: -0.02em;
-    }
-
-    .logo span {
-      font-style: normal;
-      font-size: 1rem;
-      color: var(--text2);
-    }
+    .readme-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .readme-dot.r { background: #ff5f57; }
+    .readme-dot.y { background: #febc2e; }
+    .readme-dot.g { background: #28c840; }
+    .readme-filename { font-size: 0.7rem; color: var(--text3); }
 
     .theme-toggle {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 50px;
-      padding: 0.4rem 1rem;
-      cursor: pointer;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--text2);
-      transition: all 0.2s;
-    }
-
-    .theme-toggle:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .hero {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.2rem, 6vw, 3.8rem);
-      line-height: 1.1;
-      font-weight: 700;
-      margin-bottom: 0.8rem;
-    }
-
-    .hero h1 em {
-      font-style: italic;
-      color: var(--accent);
-    }
-
-    .hero p {
-      color: var(--text2);
-      font-size: 0.88rem;
-      line-height: 1.7;
-    }
-
-    .search-wrap {
-      display: flex;
-      gap: 0.6rem;
-      max-width: 480px;
-      margin: 2rem auto;
-    }
-
-    .search-input {
-      flex: 1;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.9rem;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .search-input::placeholder {
-      color: var(--text2);
-      opacity: 0.6;
-    }
-
-    .search-input:focus {
-      border-color: var(--accent);
-    }
-
-    .search-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 0.75rem 1.4rem;
-      cursor: pointer;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.9rem;
-      transition: opacity 0.2s, transform 0.15s;
-      white-space: nowrap;
-    }
-
-    .search-btn:hover {
-      opacity: 0.85;
-      transform: translateY(-1px);
-    }
-
-    .search-btn:active {
-      transform: translateY(0);
-    }
-
-    #result {
-      margin-top: 2rem;
-    }
-
-    .profile-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 2px solid var(--accent2);
-    }
-
-    .profile-link {
-      text-decoration: none;
-      color: inherit;
-      display: inline-block;
-      transition: transform 0.2s;
-    }
-    .profile-link:hover {
-      transform: translateY(-1px);
-    }
-    .profile-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-    }
-
-    .profile-sub {
-      font-size: 0.78rem;
-      color: var(--text2);
-    }
-
-    .stats-row {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .stat {
-      font-size: 0.8rem;
-      color: var(--text2);
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 1.4rem;
-      font-family: 'Playfair Display', serif;
-      color: var(--accent);
-      line-height: 1;
-    }
-
-    /* Graph */
-    .graph-container {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      overflow-x: auto;
-      box-shadow: 0 4px 24px var(--shadow);
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .graph-label {
-      font-size: 0.7rem;
-      color: var(--text2);
-      margin-bottom: 0.75rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    /* The scroll container — everything inside here has a fixed pixel width */
-    .graph-scroll {
-      display: inline-block;
-      /* shrink-wraps to content width */
-      min-width: 100%;
-    }
-
-    /* Month labels: positioned absolutely over the weeks grid */
-    .month-row {
-     position: relative;
-      height: 14px;
-      /* left-pad to align with where the weeks start (after day-labels) */
-      margin-left: 24px;
-    }
-
-    .month-label {
-      position: absolute;
-      font-size: 0.62rem;
-      color: var(--text2);
-      white-space: nowrap;
-      top: 0;
-    }
-
-    .graph-body {
-      display: flex;
-      gap: 0;
-    }
-
-    .day-labels {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      margin-right: 4px;
-      width: 20px;
-      flex-shrink: 0;
-    }
-
-    .day-label {
-      font-size: 0.6rem;
-      color: var(--text2);
-      width: 20px;
-      height: 13px;
-      line-height: 13px;
-      text-align: right;
-    }
-
-    .weeks {
-      display: flex;
-      gap: 2px;
-    }
-
-    .week {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .day-cell {
-      width: 13px;
-      height: 13px;
-      border-radius: 2px;
-      border: 1px solid var(--border);
-      font-size: 10px;
-      line-height: 13px;
-      text-align: center;
-      cursor: default;
-      transition: transform 0.1s;
-      position: relative;
-      background: transparent;
-    }
-
-    .day-cell:hover {
-      transform: scale(1.4);
-      z-index: 10;
-    }
-
-    .day-cell.zero {
-      background: transparent;
-      border: 1px solid #37ff00b9;
-    }
-
-    [data-theme="dark"] .day-cell.zero {
-      border-color: #4a7a44;
-    }
-
-    .legend {
+      margin-left: auto;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      margin-top: 0.75rem;
+    }
+    .theme-label {
       font-size: 0.65rem;
-      color: var(--text2);
+      color: var(--text3);
+      letter-spacing: 0.04em;
     }
-
-    /* Export section */
-    .export-section {
-      margin-top: 2rem;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-    }
-
-    .export-section h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem;
-      font-style: italic;
-      margin-bottom: 1rem;
-      color: var(--text);
-    }
-
-    .embed-code {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-      font-size: 0.72rem;
-      color: var(--text2);
-      word-break: break-all;
-      line-height: 1.6;
-    }
-
-    .embed-actions {
-      display: flex;
-      justify-content: center;
-      margin-top: 0.75rem;
-    }
-
-    .copy-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 0.35rem 1rem;
-      font-size: 1rem;
+    .toggle-track {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      background: var(--border2);
+      border-radius: 10px;
       cursor: pointer;
-      font-family: 'DM Mono', monospace;
-      transition: opacity 0.2s, background 0.2s;
+      border: none;
+      padding: 0;
+      transition: background 0.25s;
+      flex-shrink: 0;
     }
-
-    .copy-btn:hover {
-      opacity: 0.85;
+    .toggle-track:hover { opacity: 0.85; }
+    [data-theme="light"] .toggle-track { background: var(--accent); }
+    .toggle-thumb {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.22s cubic-bezier(.4, 0, .2, 1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
-
-    /* Loading & error */
-    .loader {
+    [data-theme="light"] .toggle-thumb { transform: translateX(16px); }
+    .toggle-icon {
+      font-size: 0.75rem;
+      line-height: 1;
+      user-select: none;
+      width: 20px;
+      display: inline-block;
       text-align: center;
-      padding: 3rem;
+    }
+
+    .readme-body {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 2.5rem 2rem 2rem;
+      transition: background 0.25s;
+      box-shadow: var(--shadow);
+      max-width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .md-h1 {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.03em;
+      text-align: center;
+    }
+    .md-h1 .highlight {
+      background: linear-gradient(135deg, var(--accent), var(--c4, #ff8fab));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .md-h1 .garden-word {
+      color: var(--garden-color);
+    }
+
+    .md-badge-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0 1.5rem; }
+    .md-badge {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
       color: var(--text2);
-      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      transition: background 0.25s;
+    }
+    .md-badge.primary {
+      background: color-mix(in srgb, var(--accent) 15%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+      color: var(--c4, #ff8fab);
     }
 
-    .loader .spinner {
-      font-size: 2rem;
-      display: block;
+    .md-p { font-size: 0.88rem; color: var(--text2); margin-bottom: 1.2rem; text-align: center; }
+    .md-p code {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      padding: 0.1em 0.4em;
+      font-size: 0.85em;
+      color: var(--text);
+      transition: background 0.25s;
+    }
+
+    .md-h2 {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
       margin-bottom: 1rem;
-      animation: spin 2s linear infinite;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .md-h2::before { content: '## '; color: var(--text3); }
+
+    .hero-flex {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-bottom: 0.75rem;
+      width: 100%;
+    }
+    .hero-main {
+      flex: 1 1 500px;
+      min-width: 0;
+    }
+    .hero-main .md-h1,
+    .hero-main .md-p { text-align: left; }
+    .hero-main .search-row { justify-content: flex-start; }
+
+    .search-row { display: flex; gap: 0.5rem; margin: 1.75rem 0 0.5rem; width: 100%;}
+    .search-input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border2));
+      border-radius: 6px;
+      padding: 0.65rem 1rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      font-size: 0.85rem;
+      color: var(--text);
+      outline: none;
+      transition: box-shadow 0.2s, background 0.25s;
+    }
+    .search-input::placeholder { color: var(--text3); }
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent);
+    }
+    .search-btn {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.6rem 1.2rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s cubic-bezier(.4, 0, .2, 1), box-shadow 0.18s, filter 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+    .search-btn:hover {
+      transform: translateY(-2px);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 40%, transparent);
+    }
+    .search-btn:active {
+      transform: translateY(0);
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 30%, transparent);
     }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+    #result { margin-top: 0; max-width: 100%; }
+
+    .loader { font-size: 0.8rem; color: var(--text2); padding: 2rem 0; text-align: center; }
+    .spinner { display: inline-block; animation: spin 1s linear infinite; margin-right: 0.5rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .demo-note {
+      font-size: 0.82rem;
+      color: var(--text3);
+      margin: 0.25rem 0 1.4rem;
+      line-height: 1.7;
     }
+    .demo-note strong { color: var(--text2); font-weight: 500; }
+    .demo-note-break { display: none; }
 
     .error-msg {
-      background: #fff0f3;
-      border: 1px solid #ffc0cb;
-      border-radius: 8px;
-      padding: 1rem 1.5rem;
-      color: var(--accent);
-      font-size: 0.85rem;
+      font-size: 0.8rem; color: #f87171;
+      padding: 1rem;
+      background: rgba(248,113,113,0.06);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 6px;
     }
 
-    [data-theme="dark"] .error-msg {
-      background: #1a0d12;
+    .profile-row { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; margin-bottom: 1.2rem; }
+    .profile-info { display: flex; align-items: center; gap: 0.9rem; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border2); }
+    .profile-name { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  ; font-size: 1.1rem; font-weight: 700; }
+    .profile-sub { font-size: 0.82rem; color: var(--text2); }
+
+    .stats-row { display: flex; gap: 1.5rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+    .stat { font-size: 0.72rem; color: var(--text2); }
+    .stat strong {
+      display: block;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--c3, var(--accent));
+      line-height: 1.1;
     }
 
-    /* Tooltip */
-    .tooltip {
-      position: fixed;
-      background: var(--text);
-      color: var(--bg);
-      padding: 0.35rem 0.65rem;
-      border-radius: 50px;
-      font-size: 0.7rem;
-      pointer-events: none;
-      z-index: 100;
-      display: none;
-      white-space: nowrap;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    .graph-container {
+      position: relative;
+      background:transparent;
+      padding: 1rem 1rem 0.8rem;
+      overflow-x: auto;
+      margin-bottom: 0.2rem;
+      -webkit-overflow-scrolling: touch;
+      transition: background 0.25s;
+      max-width: 100%;
     }
+    .graph-toggle { position: absolute; top: 0.7rem; left: 0.8rem; margin-left: 0; }
+    .graph-scroll { display: inline-block; }
+    .month-row { position: relative; height: 16px; margin-bottom: 4px; }
+    .month-label { position: absolute; font-size: 0.65rem; color: var(--mono-text); }
+    .graph-body { display: flex; align-items: flex-start; }
+    .day-labels { display: flex; flex-direction: column; gap: 2px; margin-right: 4px; padding-top: 1px; }
+    .day-label { width: 20px; height: 13px; font-size: 0.6rem; color: var(--mono-text); display: flex; align-items: center; justify-content: flex-end; }
+    .weeks { display: flex; gap: 2px; }
+    .week { display: flex; flex-direction: column; gap: 2px; }
 
-    /* Bloom Animation */
+    .day-cell {
+      width: 13px; height: 13px;
+      border-radius: 2px;
+      background: transparent;
+      cursor: pointer;
+      transition: opacity 0.1s, transform 0.1s;
+      position: relative;
+    }
+    .day-cell:hover { opacity: 0.85; transform: scale(1.35); z-index: 5; }
+    .day-cell.zero svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+    /* Bloom entrance animation */
     @keyframes bloom {
       0% { transform: scale(0) rotate(-15deg); opacity: 0; }
-      50% { transform: scale(1.1) rotate(5deg); }
       100% { transform: scale(1) rotate(0deg); opacity: 1; }
     }
     .bloom-cell svg {
@@ -499,313 +422,765 @@
       transform-origin: center;
     }
 
-    footer {
-      text-align: center;
-      margin-top: 4rem;
-      color: var(--text2);
-      font-size: 0.72rem;
-      line-height: 1.8;
+    .legend-row {
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 0.5rem; font-size: 0.65rem; color: var(--text3);
+      padding: 0.5rem 0 0.1rem;
+    }
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      display: inline-block;
     }
 
-    footer a {
-      color: var(--accent);
+    #tooltip {
+      position: fixed;
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 5px;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.7rem;
+      color: var(--text);
+      pointer-events: none;
+      z-index: 999;
+      white-space: nowrap;
+      box-shadow: var(--shadow);
+      transition: background 0.25s;
+    }
+
+    .quick-copy-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      max-width: 100%;
+    }
+    .quick-copy {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      transition: transform 0.18s cubic-bezier(.4, 0, .2, 1), box-shadow 0.18s, filter 0.15s, background 0.15s;
+      max-width: 100%;
+    }
+    .quick-copy:hover {
+      transform: translateY(-2px);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 40%, transparent);
+    }
+    .quick-copy:active {
+      transform: translateY(0);
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+    .quick-copy.copied { border-color: #4ade80; }
+    .quick-copy-tag {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .quick-copy-icon { font-size: 0.9rem; }
+
+    .demo-star-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.4rem;
+    }
+    .demo-star-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.6rem 1.15rem;
       text-decoration: none;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: transform 0.18s cubic-bezier(.4, 0, .2, 1), box-shadow 0.18s, filter 0.15s, background 0.15s;
     }
+    .demo-star-btn:hover {
+      transform: translateY(-2px);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 40%, transparent);
+    }
+    .demo-star-btn:active {
+      transform: translateY(0);
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+    .demo-star-btn-icon { font-size: 0.95rem; line-height: 1; }
 
-    footer a:hover {
+    .gitcolors-note {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.7rem;
+      color: var(--text3);
+    }
+    .gitcolors-note a {
+      font-weight: 700;
+      color: var(--text2);
       text-decoration: underline;
     }
+    .gitcolors-note a:hover { color: var(--text); }
+
+    .about-section {
+      margin-top: 2.5rem; padding-top: 0;
+      font-size: 0.75rem; color: var(--text3);
+      display: flex; justify-content: center;
+      align-items: center; flex-wrap: wrap; gap: 0.5rem;
+      text-align: center;
+    }
+    .about-section a { color: var(--text2); text-decoration: none; }
+    .about-section a:hover { color: var(--text); }
+
+    @media (max-width: 812px) {
+      .hero-flex { flex-direction: column; gap: 1.5rem; }
+      .hero-main { flex: none; width: 100%; max-width: 100%; text-align: center; }
+      .hero-main .md-h1,
+      .hero-main .md-p { text-align: center; }
+      .hero-main .search-row { justify-content: center; }
+      .demo-note-break { display: block; }
+    }
+
+    @media (max-width: 600px) {
+      .wrapper { padding: 1.5rem 1rem 5rem; }
+      .readme-body { padding: 1.5rem 1rem; }
+      .search-row { flex-direction: column; width: 100%; }
+      .search-input { width: 100%; text-align: center; }
+      .search-btn { width: 100%; }
+      .theme-label { display: none; }
+    }
+
+    /* ─── BACKGROUND SCENES (day / night sakura garden) ────────────── */
+    .bg-scene {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .bg-scene svg { width: 100%; height: 100%; display: block; }
+    [data-theme="light"] .bg-scene--day { opacity: 1; }
+    [data-theme="dark"] .bg-scene--night { opacity: 1; }
   </style>
+<base target="_blank">
 </head>
-
 <body>
-  <div class="petals" id="petals"></div>
-  <div class="tooltip" id="tooltip"></div>
 
-  <div class="wrapper">
-    <header>
-      <div class="logo">sakura<span> garden</span></div>
-      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀ light mode</button>
-    </header>
+<div class="bg-scene bg-scene--day" aria-hidden="true">
+  <svg viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="skyDay" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#a7ddff"/>
+        <stop offset="45%" stop-color="#ffe6c8"/>
+        <stop offset="100%" stop-color="#ffd3e2"/>
+      </linearGradient>
+      <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#fff6cf" stop-opacity="0.55"/>
+        <stop offset="100%" stop-color="#fff6cf" stop-opacity="0"/>
+      </radialGradient>
+      <symbol id="bloomFlower" viewBox="-8 -8 16 16">
+        <g fill="currentColor">
+          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3"/>
+          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(288)"/>
+        </g>
+        <circle cx="0" cy="0" r="2.1" fill="#fff" opacity="0.65"/>
+      </symbol>
+    </defs>
+    <rect width="1440" height="810" fill="url(#skyDay)"/>
+    <!-- discreet sun tucked in the corner -->
+    <circle cx="1360" cy="70" r="90" fill="url(#sunGlow)"/>
+    <circle cx="1360" cy="70" r="28" fill="#ffe6a3" opacity="0.9"/>
+    <path d="M0,560 C250,505 500,565 760,525 C1000,495 1250,545 1440,505 L1440,810 L0,810 Z" fill="#c3ecae"/>
+    <path d="M0,625 C300,585 600,650 900,605 C1150,565 1300,625 1440,595 L1440,810 L0,810 Z" fill="#a2dd8c"/>
+    <path d="M0,780 C300,760 600,795 900,770 C1100,755 1300,780 1440,765 L1440,810 L0,810 Z" fill="#8fd177"/>
+    <g id="groundFlowersDay">
+      <line x1="90" y1="700" x2="90" y2="666" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlower" x="79" y="654" width="22" height="22" color="#ff9fc2"/>
+      <line x1="170" y1="650" x2="170" y2="620" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlower" x="160" y="609" width="20" height="20" color="#ff85b3"/>
+      <line x1="230" y1="740" x2="230" y2="700" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlower" x="217" y="686" width="26" height="26" color="#ff9fc2"/>
+      <line x1="310" y1="600" x2="310" y2="574" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlower" x="301" y="564" width="18" height="18" color="#ff85b3"/>
+      <line x1="60" y1="770" x2="60" y2="735" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlower" x="49" y="723" width="22" height="22" color="#ff85b3"/>
+      <line x1="400" y1="690" x2="400" y2="656" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlower" x="388" y="643" width="24" height="24" color="#ffb3cc"/>
+      <line x1="470" y1="630" x2="470" y2="604" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlower" x="461" y="594" width="18" height="18" color="#ff9fc2"/>
+      <line x1="540" y1="760" x2="540" y2="723" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlower" x="527" y="709" width="26" height="26" color="#ff85b3"/>
+      <line x1="600" y1="695" x2="600" y2="662" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlower" x="588" y="649" width="24" height="24" color="#ffb3cc"/>
+      <line x1="650" y1="605" x2="650" y2="580" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlower" x="642" y="571" width="16" height="16" color="#ff85b3"/>
+      <line x1="700" y1="745" x2="700" y2="706" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlower" x="687" y="692" width="26" height="26" color="#ff9fc2"/>
+      <line x1="790" y1="655" x2="790" y2="626" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlower" x="779" y="614" width="22" height="22" color="#ff85b3"/>
+      <line x1="850" y1="600" x2="850" y2="578" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlower" x="841" y="568" width="18" height="18" color="#ffb3cc"/>
+      <line x1="900" y1="775" x2="900" y2="737" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlower" x="886" y="722" width="28" height="28" color="#ff85b3"/>
+      <line x1="960" y1="700" x2="960" y2="666" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlower" x="948" y="653" width="24" height="24" color="#ff9fc2"/>
+      <line x1="1030" y1="620" x2="1030" y2="594" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlower" x="1021" y="584" width="18" height="18" color="#ff85b3"/>
+      <line x1="1080" y1="755" x2="1080" y2="716" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlower" x="1067" y="702" width="26" height="26" color="#ffb3cc"/>
+      <line x1="1140" y1="665" x2="1140" y2="635" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlower" x="1129" y="623" width="22" height="22" color="#ff85b3"/>
+      <line x1="1200" y1="610" x2="1200" y2="584" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlower" x="1191" y="574" width="18" height="18" color="#ff9fc2"/>
+      <line x1="1260" y1="740" x2="1260" y2="700" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlower" x="1247" y="686" width="26" height="26" color="#ff85b3"/>
+      <line x1="1320" y1="680" x2="1320" y2="648" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlower" x="1309" y="636" width="22" height="22" color="#ffb3cc"/>
+      <line x1="1370" y1="770" x2="1370" y2="732" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlower" x="1357" y="718" width="26" height="26" color="#ff85b3"/>
+      <line x1="1390" y1="620" x2="1390" y2="594" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlower" x="1381" y="584" width="18" height="18" color="#ff9fc2"/>
+    </g>
+    <!-- a few discreet blossoms drifting near the edges -->
+    <use href="#bloomFlower" x="60" y="240" width="26" height="26" color="#ff9fc2" opacity="0.5"/>
+    <use href="#bloomFlower" x="1330" y="320" width="22" height="22" color="#ffb3cc" opacity="0.45"/>
+    <use href="#bloomFlower" x="1120" y="140" width="18" height="18" color="#ff85b3" opacity="0.4"/>
+  </svg>
+</div>
 
-    <section class="hero">
-      <h1>your contributions,<br />but make it <em>bloom</em></h1>
-      <p>GitHub contributions garden 🌸<br />add it to your README or portfolio</p>
-      <p>Light & dark mode support</p>
+<div class="bg-scene bg-scene--night" aria-hidden="true">
+  <svg viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="skyNight" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#080c22"/>
+        <stop offset="40%" stop-color="#1c1c3e"/>
+        <stop offset="72%" stop-color="#2b3350"/>
+        <stop offset="100%" stop-color="#33475a"/>
+      </linearGradient>
+      <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#cbc7a8" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="#cbc7a8" stop-opacity="0"/>
+      </radialGradient>
+      <symbol id="bloomFlowerNight" viewBox="-8 -8 16 16">
+        <g fill="currentColor">
+          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3"/>
+          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(288)"/>
+        </g>
+        <circle cx="0" cy="0" r="2.1" fill="#fff" opacity="0.35"/>
+      </symbol>
+    </defs>
+    <rect width="1440" height="810" fill="url(#skyNight)"/>
+    <g fill="#ffffff">
+      <circle cx="140" cy="90" r="1.6" opacity="0.8"/>
+      <circle cx="260" cy="150" r="1.2" opacity="0.6"/>
+      <circle cx="420" cy="70" r="1.8" opacity="0.9"/>
+      <circle cx="560" cy="180" r="1.3" opacity="0.7"/>
+      <circle cx="680" cy="60" r="1.5" opacity="0.75"/>
+      <circle cx="830" cy="130" r="1.2" opacity="0.6"/>
+      <circle cx="330" cy="230" r="1.1" opacity="0.55"/>
+      <circle cx="60" cy="220" r="1.4" opacity="0.7"/>
+      <circle cx="960" cy="90" r="1.3" opacity="0.65"/>
+      <circle cx="1050" cy="200" r="1.1" opacity="0.55"/>
+    </g>
+    <!-- discreet moon tucked in the corner, softer tone -->
+    <circle cx="80" cy="65" r="70" fill="url(#moonGlow)"/>
+    <circle cx="80" cy="65" r="26" fill="#d9d4b0" opacity="0.85"/>
+    <circle cx="72" cy="55" r="4.5" fill="#c3bd97" opacity="0.5"/>
+    <circle cx="90" cy="72" r="6" fill="#c3bd97" opacity="0.4"/>
+    <path d="M0,560 C250,510 500,565 760,530 C1000,500 1250,545 1440,510 L1440,810 L0,810 Z" fill="#182c3a"/>
+    <path d="M0,625 C300,590 600,650 900,610 C1150,575 1300,625 1440,600 L1440,810 L0,810 Z" fill="#1c3329"/>
+    <path d="M0,780 C300,760 600,795 900,770 C1100,755 1300,780 1440,765 L1440,810 L0,810 Z" fill="#22402b"/>
+    <g id="groundFlowersNight">
+      <line x1="90" y1="700" x2="90" y2="667" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="80" y="656" width="20" height="20" color="#7f2440"/>
+      <line x1="170" y1="650" x2="170" y2="621" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="161" y="611" width="18" height="18" color="#6b1f35"/>
+      <line x1="230" y1="740" x2="230" y2="700" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="218" y="687" width="24" height="24" color="#8a2846"/>
+      <line x1="310" y1="600" x2="310" y2="574" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="302" y="565" width="16" height="16" color="#7f2440"/>
+      <line x1="60" y1="770" x2="60" y2="736" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="50" y="725" width="20" height="20" color="#6b1f35"/>
+      <line x1="400" y1="690" x2="400" y2="657" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="389" y="645" width="22" height="22" color="#8a2846"/>
+      <line x1="470" y1="630" x2="470" y2="605" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="462" y="596" width="16" height="16" color="#7f2440"/>
+      <line x1="540" y1="760" x2="540" y2="724" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="528" y="711" width="24" height="24" color="#6b1f35"/>
+      <line x1="600" y1="695" x2="600" y2="663" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="589" y="651" width="22" height="22" color="#8a2846"/>
+      <line x1="650" y1="605" x2="650" y2="581" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="643" y="573" width="14" height="14" color="#7f2440"/>
+      <line x1="700" y1="745" x2="700" y2="707" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="688" y="694" width="24" height="24" color="#6b1f35"/>
+      <line x1="790" y1="655" x2="790" y2="627" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="780" y="616" width="20" height="20" color="#8a2846"/>
+      <line x1="850" y1="600" x2="850" y2="579" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="842" y="570" width="16" height="16" color="#7f2440"/>
+      <line x1="900" y1="775" x2="900" y2="738" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="887" y="724" width="26" height="26" color="#6b1f35"/>
+      <line x1="960" y1="700" x2="960" y2="667" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="949" y="655" width="22" height="22" color="#8a2846"/>
+      <line x1="1030" y1="620" x2="1030" y2="595" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="1022" y="586" width="16" height="16" color="#7f2440"/>
+      <line x1="1080" y1="755" x2="1080" y2="717" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="1068" y="704" width="24" height="24" color="#6b1f35"/>
+      <line x1="1140" y1="665" x2="1140" y2="636" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="1130" y="625" width="20" height="20" color="#8a2846"/>
+      <line x1="1200" y1="610" x2="1200" y2="585" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="1192" y="576" width="16" height="16" color="#7f2440"/>
+      <line x1="1260" y1="740" x2="1260" y2="701" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="1248" y="688" width="24" height="24" color="#6b1f35"/>
+      <line x1="1320" y1="680" x2="1320" y2="649" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="1310" y="638" width="20" height="20" color="#8a2846"/>
+      <line x1="1370" y1="770" x2="1370" y2="733" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="1358" y="720" width="24" height="24" color="#6b1f35"/>
+      <line x1="1390" y1="620" x2="1390" y2="595" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
+      <use href="#bloomFlowerNight" x="1382" y="586" width="16" height="16" color="#7f2440"/>
+    </g>
+    <!-- a few discreet blossoms drifting near the edges -->
+    <use href="#bloomFlowerNight" x="60" y="240" width="26" height="26" color="#7f2440" opacity="0.4"/>
+    <use href="#bloomFlowerNight" x="1330" y="320" width="22" height="22" color="#6b1f35" opacity="0.35"/>
+    <use href="#bloomFlowerNight" x="1120" y="140" width="18" height="18" color="#8a2846" opacity="0.3"/>
+    <g fill="#4a7a44" opacity="0.7">
+      <path d="M40,805 Q43,782 47,803 Z"/>
+      <path d="M120,807 Q124,788 128,805 Z"/>
+      <path d="M250,798 Q253,776 257,796 Z"/>
+      <path d="M340,800 Q344,780 348,798 Z"/>
+      <path d="M430,793 Q433,770 437,791 Z"/>
+      <path d="M520,796 Q524,775 528,794 Z"/>
+      <path d="M610,792 Q613,768 617,790 Z"/>
+      <path d="M710,795 Q714,774 718,793 Z"/>
+      <path d="M800,799 Q803,777 807,797 Z"/>
+      <path d="M890,802 Q894,782 898,800 Z"/>
+      <path d="M980,798 Q983,776 987,796 Z"/>
+      <path d="M1080,806 Q1083,785 1087,804 Z"/>
+      <path d="M1170,795 Q1174,772 1178,793 Z"/>
+      <path d="M1260,800 Q1263,780 1267,798 Z"/>
+      <path d="M1350,798 Q1354,776 1358,796 Z"/>
+      <path d="M1420,806 Q1423,785 1427,804 Z"/>
+    </g>
+  </svg>
+</div>
 
-      <div class="search-wrap">
-        <input class="search-input" type="text" id="usernameInput" placeholder="github username" autocomplete="off"
-          onkeydown="if(event.key==='Enter') search()" />
-        <button class="search-btn" onclick="search()">bloom →</button>
-      </div>
-    </section>
+<div id="tooltip"></div>
 
-    <div id="result"></div>
-
-    <footer>
-      made with 🌸 · <a href="https://github.com/a104437ana/sakura-garden" target="_blank">view on github</a> · open
-      source
-    </footer>
+<div class="wrapper">
+  <div class="readme-bar">
+    <span class="readme-filename">README.md</span>
+    <div class="theme-toggle">
+      <span class="toggle-icon">🌙</span>
+      <button class="toggle-track" onclick="toggleTheme()" title="Toggle theme">
+        <div class="toggle-thumb"></div>
+      </button>
+      <span class="toggle-icon">☀️</span>
+    </div>
   </div>
 
-  <script>
-    const API_BASE = 'https://sakura-garden.vercel.app/api/contributions';
-
-    const CELL = 13, GAP = 2, STEP = CELL + GAP;
-    const DAY_LABEL_W = 24; // px — must match .day-labels width + margin-right
-
-    let currentTheme = 'light';
-    let currentData = null;
-    let currentUsername = '';
-
-    // Petals
-    function spawnPetals() {
-      const container = document.getElementById('petals');
-      for (let i = 0; i < 18; i++) {
-        const p = document.createElement('div');
-        p.className = 'petal';
-        p.textContent = '🌸';
-        p.style.left = Math.random() * 100 + '%';
-        p.style.animationDuration = (8 + Math.random() * 14) + 's';
-        p.style.animationDelay = (Math.random() * 20) + 's';
-        p.style.fontSize = (0.7 + Math.random() * 0.8) + 'rem';
-        container.appendChild(p);
-      }
-    }
-    spawnPetals();
-
-    // Theme
-    function toggleTheme() {
-      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', currentTheme === 'dark' ? 'dark' : '');
-      document.getElementById('themeBtn').textContent = currentTheme === 'dark' ? '🌙 dark mode' : '☀ light mode';
-      if (currentData) updateEmbedCodes();
-    }
-
-    // Search
-    async function search() {
-      const username = document.getElementById('usernameInput').value.trim();
-      if (!username) return;
-      currentUsername = username;
-
-      const result = document.getElementById('result');
-      result.innerHTML = `<div class="loader"><span class="spinner">🌸</span>fetching blooms for ${username}…</div>`;
-
-      try {
-        const res = await fetch(`${API_BASE}?username=${encodeURIComponent(username)}`);
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-        currentData = data;
-        renderResult(data, username);
-      } catch (err) {
-        result.innerHTML = `<div class="error-msg">couldn't find <strong>${username}</strong> — check the username and try again.</div>`;
-      }
-    }
-
-    function renderResult(data, username) {
-      const user = data.user;
-      const cal = user.contributionsCollection.contributionCalendar;
-      const total = cal.totalContributions;
-      const streakData = calcStreak(cal.weeks);
-
-      document.getElementById('result').innerHTML = `
-        <a href="https://github.com/${user.login}" target="_blank" class="profile-link">
-          <div class="profile-row">
-            <img class="avatar" src="${user.avatarUrl}" alt="${user.login}" />
-            <div>
-              <div class="profile-name">${user.name || user.login}</div>
-              <div class="profile-sub">@${user.login}</div>
-            </div>
-          </div>
-        </a>
-        <div class="stats-row">
-          <div class="stat"><strong>${total.toLocaleString()}</strong>contributions</div>
-          <div class="stat"><strong>${streakData.longest}</strong>longest streak</div>
+  <div class="readme-body">
+    <div class="hero-flex">
+      <div class="hero-main">
+        <h1 class="md-h1"><span class="highlight">sakura</span> <span class="garden-word">garden</span></h1>
+        <p class="md-p">
+          Your GitHub contributions garden
+          <br>Add it to your GitHub profile README in seconds
+        </p>
+        <div class="search-row">
+          <input id="usernameInput" class="search-input" type="text"
+            placeholder="github username" autocomplete="off" spellcheck="false" />
+          <button class="search-btn" onclick="doSearch()">→ bloom</button>
         </div>
-        <div class="graph-container" id="graphContainer">
-          <div class="graph-label">contribution activity</div>
-          ${buildGraph(cal.weeks)}
-          <div class="legend">hover for details</div>
-        </div>
-        <div class="export-section">
-          <h3 style="text-align: center;">add it to your README or portfolio</h3>
-          <div class="embed-code" id="embedCode">
-&lt;picture&gt;
-  &lt;source srcset="https://sakura-garden.vercel.app/api/svg?username=${username}&amp;theme=dark" media="(prefers-color-scheme: dark)" /&gt;
-  &lt;source srcset="https://sakura-garden.vercel.app/api/svg?username=${username}&amp;theme=light" media="(prefers-color-scheme: light)" /&gt;
-  &lt;img src="https://sakura-garden.vercel.app/api/svg?username=${username}&amp;theme=light" width="1000" alt="sakura contributions" /&gt;
-&lt;/picture&gt;
-          </div>
-          <div class="embed-actions">
-            <button class="copy-btn" id="copyBtn" onclick="copyEmbed()">copy</button>
-          </div>
-        </div>
-        <div class="export-section">
-          ⭐ If you liked this project consider giving it a star on <a href="https://github.com/a104437ana/sakura-garden" target="_blank">GitHub</a>! ⭐
-        </div>
-      `;
+      </div>
+    </div>
 
-      setupTooltips();
+    <div id="result">
+      <div class="loader">
+        <span class="spinner">◌</span>
+        loading example…
+      </div>
+    </div>
+    <div class="about-section">
+      <span>made with 🌸</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function initTheme() {
+  const saved = localStorage.getItem('sakura-garden-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = saved || (prefersDark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('sakura-garden-theme', next);
+}
+
+initTheme();
+
+function hexToRgbArr(hex) {
+  hex = hex.replace('#','');
+  if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+  return [parseInt(hex.slice(0,2),16), parseInt(hex.slice(2,4),16), parseInt(hex.slice(4,6),16)];
+}
+
+function lighten(hex, amt) {
+  const [r,g,b] = hexToRgbArr(hex);
+  const nr = Math.round(r + (255-r)*amt);
+  const ng = Math.round(g + (255-g)*amt);
+  const nb = Math.round(b + (255-b)*amt);
+  return '#' + [nr,ng,nb].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+
+let lastWeeksData = null;
+
+// Paleta sakura fixa — igual em dark e light mode (mesma paleta usada no api/svg.js)
+const SAKURA_PETAL = ['', '#ffb3cc', '#ff85b3', '#ff3d7f', '#c2005a'];
+const SAKURA_CENTER = ['', '#ffe0ee', '#ffcce0', '#ffaacc', '#ff80aa'];
+
+const THEMES = {
+  sakura: {
+    label: '🌸 sakura',
+    accent: '#ff85b3',
+    getCellColor(wi, total, level) {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (level === 0) return { fill: 'transparent', stroke: isLight ? '#52c41a' : '#4a7a44', hex: '#ff85b3' };
+      const hex = SAKURA_PETAL[level];
+      return { fill: hex, stroke: hex, hex, center: SAKURA_CENTER[level] };
+    },
+  },
+};
+
+function refreshGraph() {
+  if (!lastWeeksData) return;
+  const container = document.querySelector('.graph-container');
+  if (!container) return;
+  container.innerHTML = `${buildGraph(lastWeeksData)}<div class="legend-row" id="graphLegend"></div>`;
+  setupTooltips();
+  updateLegend();
+  fitGraphToContainer();
+}
+
+function applyLiveColor(hex) {
+  const root = document.documentElement;
+  root.style.setProperty('--lvl1', hex);
+  root.style.setProperty('--lvl2', hex);
+  root.style.setProperty('--lvl3', hex);
+  root.style.setProperty('--lvl4', hex);
+  root.style.setProperty('--c1', hex);
+  root.style.setProperty('--c2', hex);
+  root.style.setProperty('--c3', hex);
+  root.style.setProperty('--c4', hex);
+  root.style.setProperty('--accent', hex);
+  const hl = document.querySelector('.highlight');
+  if (hl) hl.style.backgroundImage = `linear-gradient(135deg,${hex},${hex}dd)`;
+  updateLegend();
+}
+
+let currentUsername = '';
+
+const API_BASE = 'https://sakura-garden.vercel.app/api/contributions';
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+async function doSearch() {
+  const username = document.getElementById('usernameInput').value.trim();
+  if (!username) return;
+  currentUsername = username;
+  quickCopyState = 'idle';
+  const result = document.getElementById('result');
+  result.innerHTML = `<div class="loader"><span class="spinner">◌</span> fetching <strong>${username}</strong>…</div>`;
+  try {
+    const res = await fetch(`${API_BASE}?username=${encodeURIComponent(username)}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    renderResult(data, username, false);
+  } catch(err) {
+    result.innerHTML = `<div class="error-msg">✗ couldn't find ${username} — check the username and try again.</div>`;
+  }
+}
+
+document.getElementById('usernameInput').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
+
+async function loadDemo() {
+  try {
+    const res = await fetch(`${API_BASE}?username=a104437ana`);
+    const data = await res.json();
+
+    if (data.error) {
+      document.getElementById('result').innerHTML =
+        `<p class="md-p" style="color:var(--text3);font-size:0.78rem;">↑ enter your username to see your garden</p>`;
+      return;
     }
 
+    renderResult(data, 'a104437ana', true);
 
-    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const DAYS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
+  } catch (err) {
+    document.getElementById('result').innerHTML =
+      `<p class="md-p" style="color:var(--text3);font-size:0.78rem;">↑ enter your username to see your garden</p>`;
+  }
+}
 
-    const PETAL_LIGHT = ['', '#ffb3cc', '#ff85b3', '#ff3d7f', '#c2005a'];
-    const CENTER_LIGHT = ['', '#ffe0ee', '#ffcce0', '#ffaacc', '#ff80aa'];
-    const PETAL_DARK = ['', '#6b1f35', '#c2185b', '#e8547a', '#ff8fab'];
-    const CENTER_DARK = ['', '#3d0f1f', '#7a0e38', '#c2185b', '#ffaacc'];
+function getLevel(count) {
+  if(count===0) return 0; if(count<=2) return 1; if(count<=5) return 2; if(count<=9) return 3; return 4;
+}
 
-    function getLevel(count) {
-      if (count === 0) return 0;
-      if (count <= 2) return 1;
-      if (count <= 5) return 2;
-      if (count <= 9) return 3;
-      return 4;
+function makePetal(level, fillColor, centerColor) {
+  const fc = fillColor || `var(--lvl${level})`;
+  const cc = centerColor || `var(--center${level})`;
+  let petals = '';
+  for (let a = 0; a < 5; a++) {
+    petals += `<ellipse cx="0" cy="-3.2" rx="2.2" ry="3.5" fill="${fc}" transform="rotate(${a * 72})"/>`;
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="-6.5 -6.5 13 13" style="display:block">${petals}<circle cx="0" cy="0" r="1.8" fill="${cc}"/></svg>`;
+}
+
+function buildGraph(weeks) {
+  const STEP = 15;
+  let monthHtml = '<div class="month-row">';
+  let lastMonth = -1;
+  let lastLabelWeek = -10;
+  weeks.forEach((week,wi) => {
+    const fd = week.contributionDays.find(d=>d.date);
+    if (!fd) return;
+    const date = new Date(fd.date);
+    const m = date.getMonth();
+    const d = date.getDate();
+    if (m !== lastMonth && d <= 7 && (wi - lastLabelWeek) > 2) {
+      monthHtml += `<span class="month-label" style="left:${wi*STEP}px">${MONTHS[m]}</span>`;
+      lastMonth = m;
+      lastLabelWeek = wi;
     }
+  });
+  monthHtml += '</div>';
 
-    function makePetal(level) {
-      const fc = PETAL_LIGHT[level];
-      const cc = CENTER_LIGHT[level];
+  let dayLabels = '<div class="day-labels">';
+  ['','Mon','','Wed','','Fri',''].forEach(d => { dayLabels += `<div class="day-label">${d}</div>`; });
+  dayLabels += '</div>';
 
-      let petals = '';
-      for (let a = 0; a < 5; a++) {
-        petals += `<ellipse cx="0" cy="-3.2" rx="2.2" ry="3.5" fill="${fc}" transform="rotate(${a * 72})"/>`;
-      }
+  let weeksHtml = '<div class="weeks">';
+  weeks.forEach((week, wi) => {
+    weeksHtml += '<div class="week">';
 
-      return `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="-6.5 -6.5 13 13" style="display:block">
-        ${petals}
-        <circle cx="0" cy="0" r="1.8" fill="${cc}"/>
-      </svg>`;
-    }
+    const dayMap = {};
+    week.contributionDays.forEach(d => {
+      const wd = d.weekday !== undefined ? d.weekday : new Date(d.date).getDay();
+      dayMap[wd] = d;
+    });
 
-    function buildGraph(weeks) {
-      // ── Month labels (absolutely positioned by week index) ──────────────────
-      let monthRowHtml = '<div class="month-row">';
-      let lastMonth = -1;
-      let lastLabelWeek = -10;
-      weeks.forEach((week, wi) => {
-        const firstDay = week.contributionDays.find(d => d.date);
-        if (!firstDay) return;
-
-        const date = new Date(firstDay.date);
-        const m = date.getMonth();
-        const d = date.getDate();
-
-        // Only show month if it changed and we haven't shown one recently (min 3 weeks gap)
-        // This prevents "AprMay" overlapping
-        if (m !== lastMonth && d <= 7 && (wi - lastLabelWeek) > 2) {
-          const left = wi * STEP;
-          monthRowHtml += `<span class="month-label" style="left:${left}px">${MONTHS[m]}</span>`;
-          lastMonth = m;
-          lastLabelWeek = wi;
+    for (let i = 0; i < 7; i++) {
+      const day = dayMap[i];
+      if (day) {
+        const count = day.contributionCount;
+        if (count > 0) {
+          const level = getLevel(count);
+          const theme = THEMES.sakura;
+          const res = theme.getCellColor(wi, weeks.length, level);
+          const fill = res.fill;
+          const center = res.center || lighten(res.hex, 0.55);
+          const delay = wi * 20 + i * 10;
+          weeksHtml += `<div class="day-cell bloom-cell" data-count="${count}" data-date="${day.date}" style="--delay:${delay}ms">${makePetal(level, fill, center)}</div>`;
+        } else {
+          weeksHtml += `<div class="day-cell zero" data-count="0" data-date="${day.date}"><svg viewBox="0 0 11 11"><rect x="0" y="0" width="11" height="11" rx="2" fill="transparent" stroke="var(--cell-empty)" stroke-width="0.8"/></svg></div>`;
         }
-      });
-      monthRowHtml += '</div>';
-
-      // ── Day labels ───────────────────────────────────────────────────────────
-      let dayLabels = '<div class="day-labels">';
-      DAYS.forEach(d => { dayLabels += `<div class="day-label">${d}</div>`; });
-      dayLabels += '</div>';
-
-      // ── Weeks grid ──────────────────────────────────────────────────────────
-      let weeksHtml = '<div class="weeks">';
-      let flowerCount = 0;
-      weeks.forEach((week, wi) => {
-        weeksHtml += '<div class="week">';
-
-        // Robust alignment: Map days to their weekdays to ensure exactly 7 rows
-        const dayMap = {};
-        week.contributionDays.forEach(d => {
-          const wd = d.weekday !== undefined ? d.weekday : new Date(d.date).getDay();
-          dayMap[wd] = d;
-        });
-
-        for (let i = 0; i < 7; i++) {
-          const day = dayMap[i];
-          if (day) {
-            const count = day.contributionCount;
-            if (count > 0) {
-              const level = getLevel(count);
-              // Stagger delay based on week index for a "wave" effect from left to right
-              const delay = wi * 20 + i * 10;
-              weeksHtml += `<div class="day-cell bloom-cell" data-count="${count}" data-date="${day.date}" style="border:none; --delay: ${delay}ms">${makePetal(level)}</div>`;
-              flowerCount++;
-            } else {
-              weeksHtml += `<div class="day-cell zero" data-count="${count}" data-date="${day.date}"></div>`;
-            }
-          } else {
-            // Padding for missing days in partial weeks (start/end of year)
-            weeksHtml += `<div class="day-cell" style="visibility:hidden"></div>`;
-          }
-        }
-        weeksHtml += '</div>';
-      });
-      weeksHtml += '</div>';
-
-      // ── Wrap in a scroll container so month labels and grid share the same
-      //    coordinate space and scroll together ─────────────────────────────
-      return `
-        <div class="graph-scroll">
-          ${monthRowHtml}
-          <div class="graph-body">${dayLabels}${weeksHtml}</div>
-        </div>`;
-    }
-
-    function setupTooltips() {
-      const tooltip = document.getElementById('tooltip');
-      document.querySelectorAll('.day-cell[data-date]').forEach(cell => {
-        cell.addEventListener('mousemove', e => {
-          const count = cell.dataset.count;
-          const date = new Date(cell.dataset.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
-          tooltip.textContent = count === '0' ? `no contributions · ${date}` : `${count} contribution${count > 1 ? 's' : ''} · ${date}`;
-          tooltip.style.display = 'block';
-          tooltip.style.left = e.clientX + 12 + 'px';
-          tooltip.style.top = e.clientY - 28 + 'px';
-        });
-        cell.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
-      });
-    }
-
-    function calcStreak(weeks) {
-      let longest = 0, current = 0;
-      weeks.flatMap(w => w.contributionDays).forEach(d => {
-        if (d.contributionCount > 0) { current++; longest = Math.max(longest, current); }
-        else { current = 0; }
-      });
-      return { longest };
-    }
-
-    function updateEmbedCodes() {
-      const el = document.getElementById('embedCode');
-      const btn = document.getElementById('copyBtn');
-      if (!el || !currentUsername) return;
-      el.innerHTML = `&lt;picture&gt;\n  &lt;source srcset="https://sakura-garden.vercel.app/api/svg?username=${currentUsername}&amp;theme=dark" media="(prefers-color-scheme: dark)" width="1000"/&gt;\n  &lt;source srcset="https://sakura-garden.vercel.app/api/svg?username=${currentUsername}&amp;theme=light" media="(prefers-color-scheme: light)" width="1000"/&gt;\n  &lt;img src="https://sakura-garden.vercel.app/api/svg?username=${currentUsername}&amp;theme=light" width="1000" alt="sakura contributions" /&gt;\n&lt;/picture&gt;`;
-      if (btn) { btn.textContent = 'copy'; btn.classList.remove('ready-to-edit'); }
-    }
-
-    function copyEmbed() {
-      const el = document.getElementById('embedCode');
-      const btn = document.getElementById('copyBtn');
-
-      // If already in "copied" state, open README
-      if (btn.classList.contains('ready-to-edit')) {
-        window.open(`https://github.com/${currentUsername}/${currentUsername}/edit/main/README.md`, '_blank');
-        return;
+      } else {
+        weeksHtml += `<div class="day-cell" style="visibility:hidden"></div>`;
       }
-
-      // Copy the text
-      const text = el.innerText
-        .trim()
-        .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-      navigator.clipboard.writeText(text);
-
-      // Switch to "copied" state — stays until next search
-      btn.textContent = 'copied! edit in README →';
-      btn.classList.add('ready-to-edit');
     }
-  </script>
+    weeksHtml += '</div>';
+  });
+  weeksHtml += '</div>';
+
+  return `<div class="graph-scroll">${monthHtml}<div class="graph-body">${dayLabels}${weeksHtml}</div></div>`;
+}
+
+function calcStreak(weeks) {
+  let longest=0, current=0;
+  weeks.flatMap(w=>w.contributionDays).forEach(d => {
+    if(d.contributionCount>0){current++;longest=Math.max(longest,current);}else current=0;
+  });
+  return longest;
+}
+
+function updateLegend() {
+  const el = document.getElementById('graphLegend');
+  if (!el) return;
+  el.innerHTML = `<span></span>`;
+}
+
+function renderResult(data, username, isDemo) {
+  const user = data.user;
+  const cal = user.contributionsCollection.contributionCalendar;
+  lastWeeksData = cal.weeks;
+  const total = cal.totalContributions;
+  const longest = calcStreak(cal.weeks);
+
+  const demoNote = isDemo
+    ? `<p class="demo-note">showing an example (@${username}) —<br class="demo-note-break"> <u>enter your username above</u> to generate your own contribution garden...</p>`
+    : `<br>`;
+
+  const starCta = `
+    <div class="demo-star-cta">
+      <a class="demo-star-btn" href="https://github.com/a104437ana/sakura-garden" target="_blank">
+        <span class="demo-star-btn-icon">⭐</span>
+        <span>Check out the project on GitHub and consider giving it a star</span>
+      </a>
+    </div>
+    <div class="gitcolors-note">
+      Want your GitHub contributions graph in any color/theme? Check out <a href="https://gitcolors.vercel.app/" target="_blank">gitcolors</a>
+    </div>
+  `;
+
+  const actionBlock = isDemo ? starCta : `
+  <br>
+    <div class="quick-copy-wrap">
+      <div class="quick-copy" id="quickCopy" onclick="handleQuickCopy('${user.login}')" title="Copy the embed code, then click again to open your README and paste it">
+        <span class="quick-copy-icon" id="quickCopyIcon">📋</span>
+        <span class="quick-copy-tag" id="quickCopyLabel">copy garden</span>
+      </div>
+    </div>
+    ${starCta}
+  `;
+
+  document.getElementById('result').innerHTML = `
+    ${demoNote}
+    <div class="profile-row">
+      <div class="profile-info">
+        <img class="avatar" src="${user.avatarUrl}" alt="${user.login}" />
+        <div>
+          <div class="profile-name">${user.name || user.login}</div>
+          <div class="profile-sub">@${user.login} · last 365 days</div>
+        </div>
+      </div>
+    </div>
+    <div class="graph-container">
+      ${buildGraph(cal.weeks)}
+      <div class="legend-row" id="graphLegend"></div>
+    </div>
+    ${actionBlock}
+  `;
+
+  setupTooltips();
+  updateLegend();
+  fitGraphToContainer();
+  if (!isDemo) updateEmbedCode();
+}
+
+function fitGraphToContainer() {
+  const container = document.querySelector('.graph-container');
+  const scrollEl = container && container.querySelector('.graph-scroll');
+  if (!container || !scrollEl) return;
+  scrollEl.style.transform = '';
+  scrollEl.style.marginBottom = '';
+  container.style.overflowX = '';
+  const pad = 32; // matches .graph-container's left+right padding (1rem each)
+  const available = container.clientWidth - pad;
+  const natural = scrollEl.scrollWidth;
+  if (natural > available && available > 0) {
+    const scale = available / natural;
+    scrollEl.style.transformOrigin = 'top left';
+    scrollEl.style.transform = `scale(${scale})`;
+    scrollEl.style.marginBottom = `${-scrollEl.scrollHeight * (1 - scale)}px`;
+    // transform doesn't shrink the layout box, so the container would still
+    // think it overflows and offer a scrollbar that reveals nothing — disable it.
+    container.style.overflowX = 'hidden';
+  }
+}
+
+let fitGraphResizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(fitGraphResizeTimer);
+  fitGraphResizeTimer = setTimeout(fitGraphToContainer, 100);
+});
+
+function setupTooltips() {
+  const tooltip = document.getElementById('tooltip');
+  document.querySelectorAll('.day-cell[data-date]').forEach(cell => {
+    cell.addEventListener('mousemove', e => {
+      const count = parseInt(cell.dataset.count);
+      const date = new Date(cell.dataset.date).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+      tooltip.textContent = count===0 ? `no contributions · ${date}` : `${count} contribution${count!==1?'s':''} · ${date}`;
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX+12)+'px';
+      tooltip.style.top  = (e.clientY-32)+'px';
+    });
+    cell.addEventListener('mouseleave', () => { tooltip.style.display='none'; });
+  });
+}
+
+function getEmbedUrl(theme) {
+  return `https://sakura-garden.vercel.app/api/svg?username=${currentUsername}&theme=${theme}`;
+}
+
+function getEmbedCode() {
+  const l=getEmbedUrl('light'), d=getEmbedUrl('dark');
+  return `<a href="https://sakura-garden.vercel.app" target="_blank" rel="noopener">\n <picture>\n  <source srcset="${d}" media="(prefers-color-scheme: dark)" width="846" height="164" style="height:auto" />\n  <source srcset="${l}" media="(prefers-color-scheme: light)" width="846" height="164" style="height:auto" />\n  <img src="${l}" width="846" height="164" style="height:auto" />\n</picture>\n</a>`;
+}
+
+function updateEmbedCode() {
+  const el = document.getElementById('embedText');
+  if (!el || !currentUsername) return;
+  el.textContent = getEmbedCode();
+}
+
+
+let quickCopyState = 'idle';
+
+function resetQuickCopyState() {
+  quickCopyState = 'idle';
+  const quick = document.getElementById('quickCopy');
+  const label = document.getElementById('quickCopyLabel');
+  const icon = document.getElementById('quickCopyIcon');
+  if (!quick || !label) return;
+  quick.classList.remove('copied');
+  label.textContent = 'copy garden';
+  if (icon) icon.textContent = '📋';
+}
+
+function handleQuickCopy(login) {
+  const quick = document.getElementById('quickCopy');
+  const label = document.getElementById('quickCopyLabel');
+  const icon = document.getElementById('quickCopyIcon');
+
+  if (quickCopyState === 'idle') {
+    navigator.clipboard.writeText(getEmbedCode());
+    quickCopyState = 'copied';
+    if (quick) quick.classList.add('copied');
+    if (label) label.textContent = 'copied! now paste it in your README →';
+    if (icon) icon.textContent = '✅';
+  } else {
+    window.open(`https://github.com/${login}/${login}/edit/main/README.md`, '_blank');
+    setTimeout(resetQuickCopyState, 1500);
+  }
+}
+
+applyLiveColor(THEMES.sakura.accent);
+loadDemo();
+</script>
+<script data-goatcounter="https://sakura-garden.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
-
 </html>
