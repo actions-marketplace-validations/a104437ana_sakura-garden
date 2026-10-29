@@ -29,7 +29,6 @@
   <style>
     /* ─── THEMES ─────────────────────────────────────────────────── */
     :root, [data-theme="dark"] {
-      --cell-empty: rgba(255,255,255,0.25);
       --mono-text: #ffffff;
       --bg: #010409;
       --surface: #0d1117;
@@ -45,7 +44,6 @@
       --c2: #c2185b;
       --c3: #ff85b3;
       --c4: #ff8fab;
-      --garden-color: #4a7a44;
       --lvl1: #6b1f35;
       --lvl2: #6b1f35;
       --lvl3: #6b1f35;
@@ -56,7 +54,6 @@
       --center4: color-mix(in srgb, var(--lvl4) 35%, white);
       --shadow: 0 4px 24px rgba(0,0,0,0.35);
       --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
-      --cell-empty: #4a7a44;
     }
 
     [data-theme="light"] {
@@ -70,9 +67,7 @@
       --text3: #9898b8;
       --shadow: 0 4px 24px rgba(0,0,0,0.08);
       --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-      --cell-empty: #52c41a;
       --mono-text: #000000;
-      --garden-color: #52c41a;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -165,8 +160,18 @@
     .readme-dot.g { background: #28c840; }
     .readme-filename { font-size: 0.7rem; color: var(--text3); }
 
-    .theme-toggle {
+    .toolbar-right {
       margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .labels-toggle {
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -176,6 +181,30 @@
       color: var(--text3);
       letter-spacing: 0.04em;
     }
+    .mini-toggle-track {
+      position: relative;
+      width: 30px;
+      height: 16px;
+      background: var(--border2);
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+      transition: background 0.25s;
+      flex-shrink: 0;
+    }
+    .mini-toggle-track:hover { opacity: 0.85; }
+    .mini-toggle-track.on { background: var(--accent); }
+    .mini-toggle-thumb {
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.22s cubic-bezier(.4, 0, .2, 1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    .mini-toggle-track.on .mini-toggle-thumb { transform: translateX(14px); }
     .toggle-track {
       position: relative;
       width: 36px;
@@ -224,21 +253,15 @@
 
     .md-h1 {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
-      font-weight: 800;
+      font-size: clamp(1.3rem, 3.2vw, 1.75rem);
+      font-weight: 700;
       line-height: 1.3;
       margin-bottom: 0.5rem;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.02em;
       text-align: center;
     }
     .md-h1 .highlight {
-      background: linear-gradient(135deg, var(--accent), var(--c4, #ff8fab));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .md-h1 .garden-word {
-      color: var(--garden-color);
+      color: var(--accent);
     }
 
     .md-badge-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0 1.5rem; }
@@ -248,7 +271,7 @@
       border-radius: 4px;
       background: var(--surface2);
       border: 1px solid var(--border2);
-      color: var(--text2);
+      color: var(--mono-text);
       letter-spacing: 0.04em;
       transition: background 0.25s;
     }
@@ -258,7 +281,7 @@
       color: var(--c4, #ff8fab);
     }
 
-    .md-p { font-size: 0.88rem; color: var(--text2); margin-bottom: 1.2rem; text-align: center; }
+    .md-p { font-size: 0.88rem; color: var(--mono-text); margin-bottom: 1.2rem; text-align: center; }
     .md-p code {
       background: var(--surface2);
       border: 1px solid var(--border2);
@@ -278,7 +301,7 @@
       padding-bottom: 0.4rem;
       border-bottom: 1px solid var(--border);
     }
-    .md-h2::before { content: '## '; color: var(--text3); }
+    .md-h2::before { content: '## '; color: var(--mono-text); }
 
     .hero-flex {
       display: flex;
@@ -341,18 +364,17 @@
 
     #result { margin-top: 0; max-width: 100%; }
 
-    .loader { font-size: 0.8rem; color: var(--text2); padding: 2rem 0; text-align: center; }
+    .loader { font-size: 0.8rem; color: var(--mono-text); padding: 2rem 0; text-align: center; }
     .spinner { display: inline-block; animation: spin 1s linear infinite; margin-right: 0.5rem; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .demo-note {
       font-size: 0.82rem;
-      color: var(--text3);
+      color: var(--mono-text);
       margin: 0.25rem 0 1.4rem;
       line-height: 1.7;
     }
-    .demo-note strong { color: var(--text2); font-weight: 500; }
-    .demo-note-break { display: none; }
+    .demo-note strong { color: var(--mono-text); font-weight: 500; }
 
     .error-msg {
       font-size: 0.8rem; color: #f87171;
@@ -367,10 +389,10 @@
     .avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border2); }
     .profile-name { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   ; font-size: 1.1rem; font-weight: 700; }
-    .profile-sub { font-size: 0.82rem; color: var(--text2); }
+    .profile-sub { font-size: 0.82rem; color: var(--mono-text); }
 
     .stats-row { display: flex; gap: 1.5rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
-    .stat { font-size: 0.72rem; color: var(--text2); }
+    .stat { font-size: 0.72rem; color: var(--mono-text); }
     .stat strong {
       display: block;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
@@ -424,7 +446,7 @@
 
     .legend-row {
       display: flex; align-items: center; justify-content: flex-end;
-      gap: 0.5rem; font-size: 0.65rem; color: var(--text3);
+      gap: 0.5rem; font-size: 0.65rem; color: var(--mono-text);
       padding: 0.5rem 0 0.1rem;
     }
     .legend-dot {
@@ -525,23 +547,23 @@
       text-align: center;
       margin-top: 1rem;
       font-size: 0.7rem;
-      color: var(--text3);
+      color: var(--mono-text);
     }
     .gitcolors-note a {
       font-weight: 700;
-      color: var(--text2);
+      color: var(--mono-text);
       text-decoration: underline;
     }
     .gitcolors-note a:hover { color: var(--text); }
 
     .about-section {
       margin-top: 2.5rem; padding-top: 0;
-      font-size: 0.75rem; color: var(--text3);
+      font-size: 0.75rem; color: var(--mono-text);
       display: flex; justify-content: center;
       align-items: center; flex-wrap: wrap; gap: 0.5rem;
       text-align: center;
     }
-    .about-section a { color: var(--text2); text-decoration: none; }
+    .about-section a { color: var(--mono-text); text-decoration: none; }
     .about-section a:hover { color: var(--text); }
 
     @media (max-width: 812px) {
@@ -550,7 +572,6 @@
       .hero-main .md-h1,
       .hero-main .md-p { text-align: center; }
       .hero-main .search-row { justify-content: center; }
-      .demo-note-break { display: block; }
     }
 
     @media (max-width: 600px) {
@@ -562,251 +583,44 @@
       .theme-label { display: none; }
     }
 
-    /* ─── BACKGROUND SCENES (day / night sakura garden) ────────────── */
-    .bg-scene {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      overflow: hidden;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-    }
-    .bg-scene svg { width: 100%; height: 100%; display: block; }
-    [data-theme="light"] .bg-scene--day { opacity: 1; }
-    [data-theme="dark"] .bg-scene--night { opacity: 1; }
   </style>
 <base target="_blank">
 </head>
 <body>
-
-<div class="bg-scene bg-scene--day" aria-hidden="true">
-  <svg viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="skyDay" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#a7ddff"/>
-        <stop offset="45%" stop-color="#ffe6c8"/>
-        <stop offset="100%" stop-color="#ffd3e2"/>
-      </linearGradient>
-      <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#fff6cf" stop-opacity="0.55"/>
-        <stop offset="100%" stop-color="#fff6cf" stop-opacity="0"/>
-      </radialGradient>
-      <symbol id="bloomFlower" viewBox="-8 -8 16 16">
-        <g fill="currentColor">
-          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3"/>
-          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(72)"/>
-          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(144)"/>
-          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(216)"/>
-          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(288)"/>
-        </g>
-        <circle cx="0" cy="0" r="2.1" fill="#fff" opacity="0.65"/>
-      </symbol>
-    </defs>
-    <rect width="1440" height="810" fill="url(#skyDay)"/>
-    <!-- discreet sun tucked in the corner -->
-    <circle cx="1360" cy="70" r="90" fill="url(#sunGlow)"/>
-    <circle cx="1360" cy="70" r="28" fill="#ffe6a3" opacity="0.9"/>
-    <path d="M0,560 C250,505 500,565 760,525 C1000,495 1250,545 1440,505 L1440,810 L0,810 Z" fill="#c3ecae"/>
-    <path d="M0,625 C300,585 600,650 900,605 C1150,565 1300,625 1440,595 L1440,810 L0,810 Z" fill="#a2dd8c"/>
-    <path d="M0,780 C300,760 600,795 900,770 C1100,755 1300,780 1440,765 L1440,810 L0,810 Z" fill="#8fd177"/>
-    <g id="groundFlowersDay">
-      <line x1="90" y1="700" x2="90" y2="666" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlower" x="79" y="654" width="22" height="22" color="#ff9fc2"/>
-      <line x1="170" y1="650" x2="170" y2="620" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlower" x="160" y="609" width="20" height="20" color="#ff85b3"/>
-      <line x1="230" y1="740" x2="230" y2="700" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlower" x="217" y="686" width="26" height="26" color="#ff9fc2"/>
-      <line x1="310" y1="600" x2="310" y2="574" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlower" x="301" y="564" width="18" height="18" color="#ff85b3"/>
-      <line x1="60" y1="770" x2="60" y2="735" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlower" x="49" y="723" width="22" height="22" color="#ff85b3"/>
-      <line x1="400" y1="690" x2="400" y2="656" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlower" x="388" y="643" width="24" height="24" color="#ffb3cc"/>
-      <line x1="470" y1="630" x2="470" y2="604" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlower" x="461" y="594" width="18" height="18" color="#ff9fc2"/>
-      <line x1="540" y1="760" x2="540" y2="723" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlower" x="527" y="709" width="26" height="26" color="#ff85b3"/>
-      <line x1="600" y1="695" x2="600" y2="662" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlower" x="588" y="649" width="24" height="24" color="#ffb3cc"/>
-      <line x1="650" y1="605" x2="650" y2="580" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlower" x="642" y="571" width="16" height="16" color="#ff85b3"/>
-      <line x1="700" y1="745" x2="700" y2="706" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlower" x="687" y="692" width="26" height="26" color="#ff9fc2"/>
-      <line x1="790" y1="655" x2="790" y2="626" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlower" x="779" y="614" width="22" height="22" color="#ff85b3"/>
-      <line x1="850" y1="600" x2="850" y2="578" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlower" x="841" y="568" width="18" height="18" color="#ffb3cc"/>
-      <line x1="900" y1="775" x2="900" y2="737" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlower" x="886" y="722" width="28" height="28" color="#ff85b3"/>
-      <line x1="960" y1="700" x2="960" y2="666" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlower" x="948" y="653" width="24" height="24" color="#ff9fc2"/>
-      <line x1="1030" y1="620" x2="1030" y2="594" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlower" x="1021" y="584" width="18" height="18" color="#ff85b3"/>
-      <line x1="1080" y1="755" x2="1080" y2="716" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlower" x="1067" y="702" width="26" height="26" color="#ffb3cc"/>
-      <line x1="1140" y1="665" x2="1140" y2="635" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlower" x="1129" y="623" width="22" height="22" color="#ff85b3"/>
-      <line x1="1200" y1="610" x2="1200" y2="584" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlower" x="1191" y="574" width="18" height="18" color="#ff9fc2"/>
-      <line x1="1260" y1="740" x2="1260" y2="700" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlower" x="1247" y="686" width="26" height="26" color="#ff85b3"/>
-      <line x1="1320" y1="680" x2="1320" y2="648" stroke="#5fa347" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlower" x="1309" y="636" width="22" height="22" color="#ffb3cc"/>
-      <line x1="1370" y1="770" x2="1370" y2="732" stroke="#5fa347" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlower" x="1357" y="718" width="26" height="26" color="#ff85b3"/>
-      <line x1="1390" y1="620" x2="1390" y2="594" stroke="#5fa347" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlower" x="1381" y="584" width="18" height="18" color="#ff9fc2"/>
-    </g>
-    <!-- a few discreet blossoms drifting near the edges -->
-    <use href="#bloomFlower" x="60" y="240" width="26" height="26" color="#ff9fc2" opacity="0.5"/>
-    <use href="#bloomFlower" x="1330" y="320" width="22" height="22" color="#ffb3cc" opacity="0.45"/>
-    <use href="#bloomFlower" x="1120" y="140" width="18" height="18" color="#ff85b3" opacity="0.4"/>
-  </svg>
-</div>
-
-<div class="bg-scene bg-scene--night" aria-hidden="true">
-  <svg viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="skyNight" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#080c22"/>
-        <stop offset="40%" stop-color="#1c1c3e"/>
-        <stop offset="72%" stop-color="#2b3350"/>
-        <stop offset="100%" stop-color="#33475a"/>
-      </linearGradient>
-      <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#cbc7a8" stop-opacity="0.35"/>
-        <stop offset="100%" stop-color="#cbc7a8" stop-opacity="0"/>
-      </radialGradient>
-      <symbol id="bloomFlowerNight" viewBox="-8 -8 16 16">
-        <g fill="currentColor">
-          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3"/>
-          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(72)"/>
-          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(144)"/>
-          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(216)"/>
-          <ellipse cx="0" cy="-4" rx="2.6" ry="4.3" transform="rotate(288)"/>
-        </g>
-        <circle cx="0" cy="0" r="2.1" fill="#fff" opacity="0.35"/>
-      </symbol>
-    </defs>
-    <rect width="1440" height="810" fill="url(#skyNight)"/>
-    <g fill="#ffffff">
-      <circle cx="140" cy="90" r="1.6" opacity="0.8"/>
-      <circle cx="260" cy="150" r="1.2" opacity="0.6"/>
-      <circle cx="420" cy="70" r="1.8" opacity="0.9"/>
-      <circle cx="560" cy="180" r="1.3" opacity="0.7"/>
-      <circle cx="680" cy="60" r="1.5" opacity="0.75"/>
-      <circle cx="830" cy="130" r="1.2" opacity="0.6"/>
-      <circle cx="330" cy="230" r="1.1" opacity="0.55"/>
-      <circle cx="60" cy="220" r="1.4" opacity="0.7"/>
-      <circle cx="960" cy="90" r="1.3" opacity="0.65"/>
-      <circle cx="1050" cy="200" r="1.1" opacity="0.55"/>
-    </g>
-    <!-- discreet moon tucked in the corner, softer tone -->
-    <circle cx="80" cy="65" r="70" fill="url(#moonGlow)"/>
-    <circle cx="80" cy="65" r="26" fill="#d9d4b0" opacity="0.85"/>
-    <circle cx="72" cy="55" r="4.5" fill="#c3bd97" opacity="0.5"/>
-    <circle cx="90" cy="72" r="6" fill="#c3bd97" opacity="0.4"/>
-    <path d="M0,560 C250,510 500,565 760,530 C1000,500 1250,545 1440,510 L1440,810 L0,810 Z" fill="#182c3a"/>
-    <path d="M0,625 C300,590 600,650 900,610 C1150,575 1300,625 1440,600 L1440,810 L0,810 Z" fill="#1c3329"/>
-    <path d="M0,780 C300,760 600,795 900,770 C1100,755 1300,780 1440,765 L1440,810 L0,810 Z" fill="#22402b"/>
-    <g id="groundFlowersNight">
-      <line x1="90" y1="700" x2="90" y2="667" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="80" y="656" width="20" height="20" color="#7f2440"/>
-      <line x1="170" y1="650" x2="170" y2="621" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="161" y="611" width="18" height="18" color="#6b1f35"/>
-      <line x1="230" y1="740" x2="230" y2="700" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="218" y="687" width="24" height="24" color="#8a2846"/>
-      <line x1="310" y1="600" x2="310" y2="574" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="302" y="565" width="16" height="16" color="#7f2440"/>
-      <line x1="60" y1="770" x2="60" y2="736" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="50" y="725" width="20" height="20" color="#6b1f35"/>
-      <line x1="400" y1="690" x2="400" y2="657" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="389" y="645" width="22" height="22" color="#8a2846"/>
-      <line x1="470" y1="630" x2="470" y2="605" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="462" y="596" width="16" height="16" color="#7f2440"/>
-      <line x1="540" y1="760" x2="540" y2="724" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="528" y="711" width="24" height="24" color="#6b1f35"/>
-      <line x1="600" y1="695" x2="600" y2="663" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="589" y="651" width="22" height="22" color="#8a2846"/>
-      <line x1="650" y1="605" x2="650" y2="581" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="643" y="573" width="14" height="14" color="#7f2440"/>
-      <line x1="700" y1="745" x2="700" y2="707" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="688" y="694" width="24" height="24" color="#6b1f35"/>
-      <line x1="790" y1="655" x2="790" y2="627" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="780" y="616" width="20" height="20" color="#8a2846"/>
-      <line x1="850" y1="600" x2="850" y2="579" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="842" y="570" width="16" height="16" color="#7f2440"/>
-      <line x1="900" y1="775" x2="900" y2="738" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="887" y="724" width="26" height="26" color="#6b1f35"/>
-      <line x1="960" y1="700" x2="960" y2="667" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="949" y="655" width="22" height="22" color="#8a2846"/>
-      <line x1="1030" y1="620" x2="1030" y2="595" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="1022" y="586" width="16" height="16" color="#7f2440"/>
-      <line x1="1080" y1="755" x2="1080" y2="717" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="1068" y="704" width="24" height="24" color="#6b1f35"/>
-      <line x1="1140" y1="665" x2="1140" y2="636" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="1130" y="625" width="20" height="20" color="#8a2846"/>
-      <line x1="1200" y1="610" x2="1200" y2="585" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="1192" y="576" width="16" height="16" color="#7f2440"/>
-      <line x1="1260" y1="740" x2="1260" y2="701" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="1248" y="688" width="24" height="24" color="#6b1f35"/>
-      <line x1="1320" y1="680" x2="1320" y2="649" stroke="#4a7a44" stroke-width="2.2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="1310" y="638" width="20" height="20" color="#8a2846"/>
-      <line x1="1370" y1="770" x2="1370" y2="733" stroke="#4a7a44" stroke-width="2.4" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="1358" y="720" width="24" height="24" color="#6b1f35"/>
-      <line x1="1390" y1="620" x2="1390" y2="595" stroke="#4a7a44" stroke-width="2" opacity="0.85"/>
-      <use href="#bloomFlowerNight" x="1382" y="586" width="16" height="16" color="#7f2440"/>
-    </g>
-    <!-- a few discreet blossoms drifting near the edges -->
-    <use href="#bloomFlowerNight" x="60" y="240" width="26" height="26" color="#7f2440" opacity="0.4"/>
-    <use href="#bloomFlowerNight" x="1330" y="320" width="22" height="22" color="#6b1f35" opacity="0.35"/>
-    <use href="#bloomFlowerNight" x="1120" y="140" width="18" height="18" color="#8a2846" opacity="0.3"/>
-    <g fill="#4a7a44" opacity="0.7">
-      <path d="M40,805 Q43,782 47,803 Z"/>
-      <path d="M120,807 Q124,788 128,805 Z"/>
-      <path d="M250,798 Q253,776 257,796 Z"/>
-      <path d="M340,800 Q344,780 348,798 Z"/>
-      <path d="M430,793 Q433,770 437,791 Z"/>
-      <path d="M520,796 Q524,775 528,794 Z"/>
-      <path d="M610,792 Q613,768 617,790 Z"/>
-      <path d="M710,795 Q714,774 718,793 Z"/>
-      <path d="M800,799 Q803,777 807,797 Z"/>
-      <path d="M890,802 Q894,782 898,800 Z"/>
-      <path d="M980,798 Q983,776 987,796 Z"/>
-      <path d="M1080,806 Q1083,785 1087,804 Z"/>
-      <path d="M1170,795 Q1174,772 1178,793 Z"/>
-      <path d="M1260,800 Q1263,780 1267,798 Z"/>
-      <path d="M1350,798 Q1354,776 1358,796 Z"/>
-      <path d="M1420,806 Q1423,785 1427,804 Z"/>
-    </g>
-  </svg>
-</div>
 
 <div id="tooltip"></div>
 
 <div class="wrapper">
   <div class="readme-bar">
     <span class="readme-filename">README.md</span>
-    <div class="theme-toggle">
-      <span class="toggle-icon">🌙</span>
-      <button class="toggle-track" onclick="toggleTheme()" title="Toggle theme">
-        <div class="toggle-thumb"></div>
-      </button>
-      <span class="toggle-icon">☀️</span>
+    <div class="toolbar-right">
+      <div class="labels-toggle">
+        <span class="theme-label">labels</span>
+        <button class="mini-toggle-track on" id="labelsToggleBtn" onclick="toggleLabels()" title="Show/hide month and weekday labels">
+          <div class="mini-toggle-thumb"></div>
+        </button>
+      </div>
+      <div class="theme-toggle">
+        <span class="toggle-icon">🌙</span>
+        <button class="toggle-track" onclick="toggleTheme()" title="Toggle theme">
+          <div class="toggle-thumb"></div>
+        </button>
+        <span class="toggle-icon">☀️</span>
+      </div>
     </div>
   </div>
 
   <div class="readme-body">
     <div class="hero-flex">
       <div class="hero-main">
-        <h1 class="md-h1"><span class="highlight">sakura</span> <span class="garden-word">garden</span></h1>
+        <h1 class="md-h1"><span class="highlight">sakura garden</span></h1>
         <p class="md-p">
           Your GitHub contributions garden
           <br>Add it to your GitHub profile README in seconds
         </p>
         <div class="search-row">
           <input id="usernameInput" class="search-input" type="text"
-            placeholder="github username" autocomplete="off" spellcheck="false" />
+            placeholder="your github username" autocomplete="off" spellcheck="false" />
           <button class="search-btn" onclick="doSearch()">→ bloom</button>
         </div>
       </div>
@@ -838,6 +652,7 @@ function toggleTheme() {
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem('sakura-garden-theme', next);
+  refreshGraph();
 }
 
 initTheme();
@@ -857,20 +672,34 @@ function lighten(hex, amt) {
 }
 
 let lastWeeksData = null;
+let showLabels = true;
 
-// Paleta sakura fixa — igual em dark e light mode (mesma paleta usada no api/svg.js)
-const SAKURA_PETAL = ['', '#ffb3cc', '#ff85b3', '#ff3d7f', '#c2005a'];
-const SAKURA_CENTER = ['', '#ffe0ee', '#ffcce0', '#ffaacc', '#ff80aa'];
+function toggleLabels() {
+  showLabels = !showLabels;
+  const btn = document.getElementById('labelsToggleBtn');
+  if (btn) btn.classList.toggle('on', showLabels);
+  refreshGraph();
+  if (currentUsername) updateEmbedCode();
+}
+
+// Paleta kawaii — só muda o light mode (verde-menta + ramo de rosas mais vivo);
+// o dark mode é quase igual ao sakura original, só o L4 troca (o #c2005a original
+// quase desaparece num fundo escuro, por isso usa-se um rosa mais vivo aqui)
+const KAWAII_PETAL = ['', '#ff85ad', '#ff5c92', '#ff3d7f', '#ff0055'];
+const KAWAII_CENTER = ['', '#ffcede', '#ffbed3', '#ffb1cc', '#ff99bb'];
+const KAWAII_DARK_PETAL = ['', '#ffb3cc', '#ff85b3', '#ff3d7f', '#ff0055'];
+const KAWAII_DARK_CENTER = ['', '#ffe0ee', '#ffcce0', '#ffaacc', '#ff99bb'];
 
 const THEMES = {
-  sakura: {
-    label: '🌸 sakura',
-    accent: '#ff85b3',
+  kawaii: {
+    label: '🌷 kawaii',
+    accent: '#ff3d7f',
     getCellColor(wi, total, level) {
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      if (level === 0) return { fill: 'transparent', stroke: isLight ? '#52c41a' : '#4a7a44', hex: '#ff85b3' };
-      const hex = SAKURA_PETAL[level];
-      return { fill: hex, stroke: hex, hex, center: SAKURA_CENTER[level] };
+      if (level === 0) return { fill: 'transparent', stroke: isLight ? '#2dd256' : '#4a7a44', hex: '#ff3d7f' };
+      const hex = isLight ? KAWAII_PETAL[level] : KAWAII_DARK_PETAL[level];
+      const center = isLight ? KAWAII_CENTER[level] : KAWAII_DARK_CENTER[level];
+      return { fill: hex, stroke: hex, hex, center };
     },
   },
 };
@@ -896,8 +725,6 @@ function applyLiveColor(hex) {
   root.style.setProperty('--c3', hex);
   root.style.setProperty('--c4', hex);
   root.style.setProperty('--accent', hex);
-  const hl = document.querySelector('.highlight');
-  if (hl) hl.style.backgroundImage = `linear-gradient(135deg,${hex},${hex}dd)`;
   updateLegend();
 }
 
@@ -917,7 +744,7 @@ async function doSearch() {
     const res = await fetch(`${API_BASE}?username=${encodeURIComponent(username)}`);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
-    renderResult(data, username, false);
+    renderResult(data, false);
   } catch(err) {
     result.innerHTML = `<div class="error-msg">✗ couldn't find ${username} — check the username and try again.</div>`;
   }
@@ -932,15 +759,15 @@ async function loadDemo() {
 
     if (data.error) {
       document.getElementById('result').innerHTML =
-        `<p class="md-p" style="color:var(--text3);font-size:0.78rem;">↑ enter your username to see your garden</p>`;
+        `<p class="md-p" style="color:var(--mono-text);font-size:0.78rem;">↑ enter your username to see your garden</p>`;
       return;
     }
 
-    renderResult(data, 'a104437ana', true);
+    renderResult(data, true);
 
   } catch (err) {
     document.getElementById('result').innerHTML =
-      `<p class="md-p" style="color:var(--text3);font-size:0.78rem;">↑ enter your username to see your garden</p>`;
+      `<p class="md-p" style="color:var(--mono-text);font-size:0.78rem;">↑ enter your username to see your garden</p>`;
   }
 }
 
@@ -960,26 +787,32 @@ function makePetal(level, fillColor, centerColor) {
 
 function buildGraph(weeks) {
   const STEP = 15;
-  let monthHtml = '<div class="month-row">';
-  let lastMonth = -1;
-  let lastLabelWeek = -10;
-  weeks.forEach((week,wi) => {
-    const fd = week.contributionDays.find(d=>d.date);
-    if (!fd) return;
-    const date = new Date(fd.date);
-    const m = date.getMonth();
-    const d = date.getDate();
-    if (m !== lastMonth && d <= 7 && (wi - lastLabelWeek) > 2) {
-      monthHtml += `<span class="month-label" style="left:${wi*STEP}px">${MONTHS[m]}</span>`;
-      lastMonth = m;
-      lastLabelWeek = wi;
-    }
-  });
-  monthHtml += '</div>';
+  let monthHtml = '';
+  if (showLabels) {
+    monthHtml = '<div class="month-row">';
+    let lastMonth = -1;
+    let lastLabelWeek = -10;
+    weeks.forEach((week,wi) => {
+      const fd = week.contributionDays.find(d=>d.date);
+      if (!fd) return;
+      const date = new Date(fd.date);
+      const m = date.getMonth();
+      const d = date.getDate();
+      if (m !== lastMonth && d <= 7 && (wi - lastLabelWeek) > 2) {
+        monthHtml += `<span class="month-label" style="left:${24 + wi*STEP}px">${MONTHS[m]}</span>`;
+        lastMonth = m;
+        lastLabelWeek = wi;
+      }
+    });
+    monthHtml += '</div>';
+  }
 
-  let dayLabels = '<div class="day-labels">';
-  ['','Mon','','Wed','','Fri',''].forEach(d => { dayLabels += `<div class="day-label">${d}</div>`; });
-  dayLabels += '</div>';
+  let dayLabels = '';
+  if (showLabels) {
+    dayLabels = '<div class="day-labels">';
+    ['','Mon','','Wed','','Fri',''].forEach(d => { dayLabels += `<div class="day-label">${d}</div>`; });
+    dayLabels += '</div>';
+  }
 
   let weeksHtml = '<div class="weeks">';
   weeks.forEach((week, wi) => {
@@ -997,14 +830,14 @@ function buildGraph(weeks) {
         const count = day.contributionCount;
         if (count > 0) {
           const level = getLevel(count);
-          const theme = THEMES.sakura;
-          const res = theme.getCellColor(wi, weeks.length, level);
+          const res = THEMES.kawaii.getCellColor(wi, weeks.length, level);
           const fill = res.fill;
           const center = res.center || lighten(res.hex, 0.55);
           const delay = wi * 20 + i * 10;
           weeksHtml += `<div class="day-cell bloom-cell" data-count="${count}" data-date="${day.date}" style="--delay:${delay}ms">${makePetal(level, fill, center)}</div>`;
         } else {
-          weeksHtml += `<div class="day-cell zero" data-count="0" data-date="${day.date}"><svg viewBox="0 0 11 11"><rect x="0" y="0" width="11" height="11" rx="2" fill="transparent" stroke="var(--cell-empty)" stroke-width="0.8"/></svg></div>`;
+          const emptyStroke = THEMES.kawaii.getCellColor(wi, weeks.length, 0).stroke;
+          weeksHtml += `<div class="day-cell zero" data-count="0" data-date="${day.date}"><svg viewBox="0 0 11 11"><rect x="0" y="0" width="11" height="11" rx="2" fill="transparent" stroke="${emptyStroke}" stroke-width="0.8"/></svg></div>`;
         }
       } else {
         weeksHtml += `<div class="day-cell" style="visibility:hidden"></div>`;
@@ -1031,7 +864,7 @@ function updateLegend() {
   el.innerHTML = `<span></span>`;
 }
 
-function renderResult(data, username, isDemo) {
+function renderResult(data, isDemo) {
   const user = data.user;
   const cal = user.contributionsCollection.contributionCalendar;
   lastWeeksData = cal.weeks;
@@ -1039,7 +872,7 @@ function renderResult(data, username, isDemo) {
   const longest = calcStreak(cal.weeks);
 
   const demoNote = isDemo
-    ? `<p class="demo-note">showing an example (@${username}) —<br class="demo-note-break"> <u>enter your username above</u> to generate your own contribution garden...</p>`
+    ? `<p class="demo-note">showing an example:</p>`
     : `<br>`;
 
   const starCta = `
@@ -1093,20 +926,14 @@ function fitGraphToContainer() {
   const container = document.querySelector('.graph-container');
   const scrollEl = container && container.querySelector('.graph-scroll');
   if (!container || !scrollEl) return;
-  scrollEl.style.transform = '';
-  scrollEl.style.marginBottom = '';
-  container.style.overflowX = '';
+  scrollEl.style.zoom = '';
   const pad = 32; // matches .graph-container's left+right padding (1rem each)
   const available = container.clientWidth - pad;
   const natural = scrollEl.scrollWidth;
   if (natural > available && available > 0) {
-    const scale = available / natural;
-    scrollEl.style.transformOrigin = 'top left';
-    scrollEl.style.transform = `scale(${scale})`;
-    scrollEl.style.marginBottom = `${-scrollEl.scrollHeight * (1 - scale)}px`;
-    // transform doesn't shrink the layout box, so the container would still
-    // think it overflows and offer a scrollbar that reveals nothing — disable it.
-    container.style.overflowX = 'hidden';
+    // zoom reflows text at the new size instead of stretching a cached bitmap
+    // like transform: scale() does, so labels stay crisp instead of blurring.
+    scrollEl.style.zoom = available / natural;
   }
 }
 
@@ -1131,13 +958,16 @@ function setupTooltips() {
   });
 }
 
-function getEmbedUrl(theme) {
-  return `https://sakura-garden.vercel.app/api/svg?username=${currentUsername}&theme=${theme}`;
+function getEmbedUrl(mode) {
+  const themeParam = mode === 'dark' ? 'kawaii-dark' : 'kawaii';
+  const labelsParam = showLabels ? '' : '&labels=false';
+  return `https://sakura-garden.vercel.app/api/svg?username=${currentUsername}&theme=${themeParam}${labelsParam}`;
 }
 
 function getEmbedCode() {
   const l=getEmbedUrl('light'), d=getEmbedUrl('dark');
-  return `<a href="https://sakura-garden.vercel.app" target="_blank" rel="noopener">\n <picture>\n  <source srcset="${d}" media="(prefers-color-scheme: dark)" width="846" height="164" style="height:auto" />\n  <source srcset="${l}" media="(prefers-color-scheme: light)" width="846" height="164" style="height:auto" />\n  <img src="${l}" width="846" height="164" style="height:auto" />\n</picture>\n</a>`;
+  const w = 846, h = showLabels ? 132 : 119;
+  return `<a href="https://sakura-garden.vercel.app" target="_blank" rel="noopener">\n <picture>\n  <source srcset="${d}" media="(prefers-color-scheme: dark)" width="${w}" height="${h}" style="height:auto" />\n  <source srcset="${l}" media="(prefers-color-scheme: light)" width="${w}" height="${h}" style="height:auto" />\n  <img src="${l}" width="${w}" height="${h}" style="height:auto" />\n</picture>\n</a>`;
 }
 
 function updateEmbedCode() {
@@ -1177,7 +1007,7 @@ function handleQuickCopy(login) {
   }
 }
 
-applyLiveColor(THEMES.sakura.accent);
+applyLiveColor(THEMES.kawaii.accent);
 loadDemo();
 </script>
 <script data-goatcounter="https://sakura-garden.goatcounter.com/count"

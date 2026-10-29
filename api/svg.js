@@ -13,21 +13,47 @@ function getLevel(count) {
   return 4;
 }
 
-function generateSVG(weeks, theme, username, total, year, animate) {
-  const isDark = theme === 'dark';
+function generateSVG(weeks, theme, username, total, year, animate, levels, labels) {
+  const isKawaii = theme === 'kawaii';
+  const isKawaiiDark = theme === 'kawaii-dark';
+  const isDark = theme === 'dark' || isKawaiiDark;
+  const isAuto = theme === 'auto';
+  const isAutoGreen = theme === 'auto-green';
+  // paletas "auto": nem claras nem escuras, lêem-se em qualquer fundo (1 só SVG, sem <picture>)
+  const autoLabelColor = '#a98fa0';
+  const autoEmptyStroke = '#ff6b9d';
+  const autoEmptyOpacity = 0.45;
+  const autoGreenEmptyStroke = '#2ea043';
+  const autoGreenEmptyOpacity = 0.6;
+  // kawaii: mesma paleta escura do original (quem já usa dark fica igual) — só o light mode
+  // muda, com um verde-menta cute e níveis que são variações próximas do rosa do L3 original
+  // (#ff3d7f), em vez de ir de um rosa quase invisível a um magenta escuro demais. O L4 do
+  // dark original (#c2005a) quase desaparece num fundo escuro, por isso o kawaii-dark troca
+  // só esse nível por um rosa mais vivo que se vê bem.
+  const kawaiiEmptyStroke = '#2dd256';
   const colors = isDark
     ? { bg: 'transparent', text: '#fdf0f5', text2: '#ffffffff', accent: '#ff6b9d',
         c0: '#1a0d12', c1: '#6b1f35', c2: '#c2185b', c3: '#e8547a', c4: '#ff8fab', border: '#2a1520' }
     : { bg: 'transparent', text: '#1a0a00', text2: '#000000ff', accent: '#e8547a',
         c0: '#f5e6e0', c1: '#ffc8d8', c2: '#ff8fab', c3: '#e8547a', c4: '#c2185b', border: '#f0ddd5' };
 
-  const flowerPetal = ['', '#ffb3cc', '#ff85b3', '#ff3d7f', '#c2005a'];
-  const flowerCenter = ['', '#ffe0ee', '#ffcce0', '#ffaacc', '#ff80aa'];
+  const flowerPetal = isKawaii
+    ? ['', '#ff85ad', '#ff5c92', '#ff3d7f', '#ff0055']
+    : isKawaiiDark
+    ? ['', '#ffb3cc', '#ff85b3', '#ff3d7f', '#ff0055']
+    : ['', '#ffb3cc', '#ff85b3', '#ff3d7f', '#c2005a'];
+  const flowerCenter = isKawaii
+    ? ['', '#ffcede', '#ffbed3', '#ffb1cc', '#ff99bb']
+    : isKawaiiDark
+    ? ['', '#ffe0ee', '#ffcce0', '#ffaacc', '#ff99bb']
+    : ['', '#ffe0ee', '#ffcce0', '#ffaacc', '#ff80aa'];
+  const UNIFORM_PETAL = isKawaii ? '#ff3d7f' : '#ff2f7e';
+  const UNIFORM_CENTER = isKawaii ? '#ffb1cc' : '#ffcfe2';
 
   // wi = índice da semana (coluna), dow = dia da semana (linha) — usados para o delay do bloom
   function flower(cx, cy, level, wi, dow) {
-    const fc = flowerPetal[level];
-    const cc = flowerCenter[level];
+    const fc = levels ? flowerPetal[level] : UNIFORM_PETAL;
+    const cc = levels ? flowerCenter[level] : UNIFORM_CENTER;
     let petals = '';
     for (let a = 0; a < 5; a++) {
       petals += `<ellipse cx="0" cy="-3.2" rx="2.2" ry="3.5" fill="${fc}" transform="rotate(${a * 72})"/>`;
@@ -40,7 +66,7 @@ function generateSVG(weeks, theme, username, total, year, animate) {
   }
 
   const cellSize = 11, gap = 2, step = cellSize + gap;
-  const paddingLeft = 28, paddingTop = 32, paddingRight = 20, paddingBottom = 20;
+  const paddingLeft = labels ? 24 : 2, paddingTop = labels ? 16 : 2, paddingRight = 10, paddingBottom = 6;
   const graphW = weeks.length * step;
   const W = graphW + paddingLeft + paddingRight;
   const H = 7 * step + paddingTop + paddingBottom;
@@ -51,15 +77,17 @@ function generateSVG(weeks, theme, username, total, year, animate) {
   let lastLabelWeek = -10;
 
   weeks.forEach((week, wi) => {
-    const firstDay = week.contributionDays.find(d => d.date);
-    if (firstDay) {
-      const date = new Date(firstDay.date);
-      const m = date.getMonth();
-      const d = date.getDate();
-      if (m !== lastMonth && d <= 7 && (wi - lastLabelWeek) > 2) {
-        monthMarkers.push({ m, wi });
-        lastMonth = m;
-        lastLabelWeek = wi;
+    if (labels) {
+      const firstDay = week.contributionDays.find(d => d.date);
+      if (firstDay) {
+        const date = new Date(firstDay.date);
+        const m = date.getMonth();
+        const d = date.getDate();
+        if (m !== lastMonth && d <= 7 && (wi - lastLabelWeek) > 2) {
+          monthMarkers.push({ m, wi });
+          lastMonth = m;
+          lastLabelWeek = wi;
+        }
       }
     }
     week.contributionDays.forEach(day => {
@@ -69,22 +97,30 @@ function generateSVG(weeks, theme, username, total, year, animate) {
       if (day.contributionCount > 0) {
         cells += flower(x + cellSize / 2, y + cellSize / 2, getLevel(day.contributionCount), wi, dow);
       } else {
-        cells += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2" fill="transparent" stroke="${isDark ? '#4a7a44' : '#52c41a'}" stroke-width="0.8" />`;
+        cells += isAuto
+          ? `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2" fill="transparent" stroke="${autoEmptyStroke}" stroke-opacity="${autoEmptyOpacity}" stroke-width="0.8" />`
+          : isAutoGreen
+          ? `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2" fill="transparent" stroke="${autoGreenEmptyStroke}" stroke-opacity="${autoGreenEmptyOpacity}" stroke-width="0.8" />`
+          : isKawaii
+          ? `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2" fill="transparent" stroke="${kawaiiEmptyStroke}" stroke-width="1" />`
+          : `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2" fill="transparent" stroke="${isDark ? '#4a7a44' : '#52c41a'}" stroke-width="0.8" />`;
       }
     });
   });
 
   let monthLabels = '';
-  monthMarkers.forEach(({ m, wi }) => {
-    const x = paddingLeft + wi * step;
-    monthLabels += `<text x="${x}" y="${paddingTop - 8}" font-size="9" fill="${isDark ? '#ffffff' : '#000000'}" font-family="${FONT_FAMILY}">${MONTHS[m]}</text>`;
-  });
-
-  const dayNames = ['','Mon','','Wed','','Fri',''];
   let dayLabels = '';
-  dayNames.forEach((d, i) => {
-    if (d) dayLabels += `<text x="${paddingLeft - 4}" y="${paddingTop + i * step + cellSize - 2}" font-size="8" fill="${isDark ? '#ffffff' : '#000000'}" font-family="${FONT_FAMILY}" text-anchor="end">${d}</text>`;
-  });
+  if (labels) {
+    monthMarkers.forEach(({ m, wi }) => {
+      const x = paddingLeft + wi * step;
+      monthLabels += `<text x="${x}" y="${paddingTop - 8}" font-size="9" fill="${isAuto || isAutoGreen ? autoLabelColor : isDark ? '#ffffff' : '#000000'}" font-family="${FONT_FAMILY}">${MONTHS[m]}</text>`;
+    });
+
+    const dayNames = ['','Mon','','Wed','','Fri',''];
+    dayNames.forEach((d, i) => {
+      if (d) dayLabels += `<text x="${paddingLeft - 4}" y="${paddingTop + i * step + cellSize - 2}" font-size="8" fill="${isAuto || isAutoGreen ? autoLabelColor : isDark ? '#ffffff' : '#000000'}" font-family="${FONT_FAMILY}" text-anchor="end">${d}</text>`;
+    });
+  }
 
   const style = animate ? `
   <style>
@@ -114,8 +150,11 @@ export default async function handler(req) {
   const { searchParams } = new URL(req.url);
   const username = searchParams.get('username');
   const year = searchParams.get('year') || new Date().getFullYear();
-  const theme = searchParams.get('theme') === 'dark' ? 'dark' : 'light';
+  const themeParam = searchParams.get('theme');
+  const theme = ['dark', 'auto', 'auto-green', 'kawaii', 'kawaii-dark'].includes(themeParam) ? themeParam : 'light';
   const animate = searchParams.get('animate') !== 'false';
+  const levels = searchParams.get('levels') !== 'false';
+  const labels = searchParams.get('labels') !== 'false';
 
   if (!username) {
     return new Response('Username required', { status: 400 });
@@ -172,7 +211,7 @@ export default async function handler(req) {
     }
 
     const cal = data.data.user.contributionsCollection.contributionCalendar;
-    const svg = generateSVG(cal.weeks, theme, username, cal.totalContributions, year, animate);
+    const svg = generateSVG(cal.weeks, theme, username, cal.totalContributions, year, animate, levels, labels);
 
     return new Response(svg, {
       status: 200,

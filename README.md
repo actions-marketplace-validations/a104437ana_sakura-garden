@@ -5,9 +5,9 @@ Turn your GitHub activity into a garden where commits bloom into flowers 🌸 an
 
 <a href="https://sakura-garden.vercel.app" target="_blank" rel="noopener">
 <picture>
-  <source srcset="https://sakura-garden.vercel.app/api/svg?username=a104437ana&theme=dark" media="(prefers-color-scheme: dark)" width="846" height="164" style="height:auto"/>
-  <source srcset="https://sakura-garden.vercel.app/api/svg?username=a104437ana&theme=light" media="(prefers-color-scheme: light)" width="846" height="164" style="height:auto"/>
-  <img src="https://sakura-garden.vercel.app/api/svg?username=a104437ana&theme=light" width="846" height="164" style="height:auto" loading="eager"/>
+  <source srcset="https://sakura-garden.vercel.app/api/svg?username=a104437ana&theme=kawaii-dark" media="(prefers-color-scheme: dark)" width="846" height="132" style="height:auto"/>
+  <source srcset="https://sakura-garden.vercel.app/api/svg?username=a104437ana&theme=kawaii" media="(prefers-color-scheme: light)" width="846" height="132" style="height:auto"/>
+  <img src="https://sakura-garden.vercel.app/api/svg?username=a104437ana&theme=kawaii" width="846" height="132" style="height:auto" loading="eager"/>
 </picture>
 </a>
 
@@ -30,18 +30,14 @@ See your garden here: https://sakura-garden.vercel.app
 4. Paste into your README
 5. Commit and push
 
-<a href="https://sakura-garden.vercel.app" target="_blank" rel="noopener">
-<img src="https://sakura-garden.vercel.app/quick-setup-demo.gif" alt="Quick setup demo" loading="lazy"/>
-</a>
-
 ## 🔧 Manual Setup
 1. Copy the code below  
 ```markdown
 <a href="https://sakura-garden.vercel.app" target="_blank" rel="noopener">
   <picture>
-    <source srcset="https://sakura-garden.vercel.app/api/svg?username=your-github-username&theme=dark" media="(prefers-color-scheme: dark)" width="846" height="164" style="height:auto"/>
-    <source srcset="https://sakura-garden.vercel.app/api/svg?username=your-github-username&theme=light" media="(prefers-color-scheme: light)" width="846" height="164" style="height:auto"/>
-    <img src="https://sakura-garden.vercel.app/api/svg?username=your-github-username&theme=light" width="846" height="164" style="height:auto"/>
+    <source srcset="https://sakura-garden.vercel.app/api/svg?username=your-github-username&theme=kawaii-dark" media="(prefers-color-scheme: dark)" width="846" height="132" style="height:auto"/>
+    <source srcset="https://sakura-garden.vercel.app/api/svg?username=your-github-username&theme=kawaii" media="(prefers-color-scheme: light)" width="846" height="132" style="height:auto"/>
+    <img src="https://sakura-garden.vercel.app/api/svg?username=your-github-username&theme=kawaii" width="846" height="132" style="height:auto"/>
   </picture>
 </a>
 ```
@@ -94,9 +90,9 @@ jobs:
 ```markdown
 <a href="https://sakura-garden.vercel.app" target="_blank" rel="noopener">
   <picture>
-    <source srcset="https://raw.githubusercontent.com/your-github-username/your-github-username/output/sakura-garden-dark.svg" media="(prefers-color-scheme: dark)" width="846" height="164" style="height:auto"/>
-    <source srcset="https://raw.githubusercontent.com/your-github-username/your-github-username/output/sakura-garden.svg" media="(prefers-color-scheme: light)" width="846" height="164" style="height:auto"/>
-    <img src="https://raw.githubusercontent.com/your-github-username/your-github-username/output/sakura-garden.svg" width="846" height="164" style="height:auto"/>
+    <source srcset="https://raw.githubusercontent.com/your-github-username/your-github-username/output/sakura-garden-dark.svg" media="(prefers-color-scheme: dark)" width="846" height="132" style="height:auto"/>
+    <source srcset="https://raw.githubusercontent.com/your-github-username/your-github-username/output/sakura-garden.svg" media="(prefers-color-scheme: light)" width="846" height="132" style="height:auto"/>
+    <img src="https://raw.githubusercontent.com/your-github-username/your-github-username/output/sakura-garden.svg" width="846" height="132" style="height:auto"/>
   </picture>
 </a>
 ```
@@ -108,11 +104,15 @@ jobs:
 ## API
 You can also hit the API directly to generate the image, without going through the site:
 
-`https://sakura-garden.vercel.app/api/svg?username=YOUR_USERNAME&theme=dark|light&animate=true|false`
+`https://sakura-garden.vercel.app/api/svg?username=YOUR_USERNAME&theme=dark|light|auto|auto-green|kawaii|kawaii-dark&animate=true|false&levels=true|false&labels=true|false`
 
 - `username` — your GitHub username
-- `theme` — `dark` or `light`
+- `theme` — `dark`, `light`, `auto`, `auto-green`, `kawaii`, or `kawaii-dark`
+  - `auto`/`auto-green` are single images that read fine on both light and dark backgrounds, no `<picture>`/`<source>` needed (`auto` uses a translucent pink outline for empty days, `auto-green` uses solid green)
+  - `kawaii`/`kawaii-dark` are a second garden type with a cuter, more saturated palette — candy-mint empty days and a tighter, more vivid pink-to-rose flower ramp in light mode; `kawaii-dark` is identical to `dark` (it exists so the `<picture>` light/dark pairing still works)
 - `animate` — set to `false` to disable the flower bloom-in animation (default `true`)
+- `levels` — set to `false` to make every flower the same, instead of shading by how active each day was (default `true`)
+- `labels` — set to `false` to hide the month and weekday labels and crop the image tight to the grid (default `true`)
 
 ## Also check out
 Want your GitHub contributions graph in any color/theme? Check out [gitcolors](https://gitcolors.vercel.app/)
@@ -121,5 +121,15 @@ Want your GitHub contributions graph in any color/theme? Check out [gitcolors](h
 If you like this project, please consider giving it a star ⭐
 
 ## Stars
-[![a104437ana/sakura-garden stars](https://repo-stars.vercel.app/api/stars-badge?repo=a104437ana%2Fsakura-garden)](https://github.com/a104437ana/sakura-garden/stargazers)
-[![a104437ana/sakura-garden stars](https://repo-stars.vercel.app/api/svg?repo=a104437ana%2Fsakura-garden)](https://github.com/a104437ana/sakura-garden/stargazers)
+[![a104437ana/sakura-garden stars](https://repo-stars.vercel.app/api/stars-badge?repo=a104437ana%2Fsakura-garden)](https://repo-stars.vercel.app)
+[![a104437ana/sakura-garden stars](https://repo-stars.vercel.app/api/svg?repo=a104437ana%2Fsakura-garden)](https://repo-stars.vercel.app)
+
+---
+
+<a href="https://star-history.com/#a104437ana/sakura-garden&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=a104437ana/sakura-garden&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=a104437ana/sakura-garden&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=a104437ana/sakura-garden&type=Date" />
+  </picture>
+</a>
